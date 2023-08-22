@@ -1,4 +1,5 @@
 <script>
+	import dayjs from 'dayjs';
 	import { localStorageStore, Accordion, AccordionItem, popup } from '@skeletonlabs/skeleton';
 	import { Beer, Delete, GlassWater, Martini, Plus, Settings, Wine } from 'lucide-svelte';
 
@@ -46,7 +47,7 @@
 	 *   @param {'m'|'f'} storeGender */
 
 	const calculateBacAddition = (volume, storeWeight, storeGender) => {
-		const alcoholDose = volume * 0.7893; // 0.789 is alcohol's weight per volume
+		const alcoholDose = volume * 0.7893; // 0.789 is alcohol's weight:volume ratio
 		return (alcoholDose / (storeWeight * r[storeGender])) * 100;
 	};
 
@@ -78,6 +79,9 @@
 	let customName = 'Spirit shot';
 	let customVolume = 40;
 	let customPercent = 40;
+	let stateInWords = `Sober`;
+	let timeOfTarget = dayjs();
+	let timeOfZero = dayjs();
 	onMount(() => {
 		setInterval(() => {
 			$bac = $drinks
@@ -104,6 +108,25 @@
 			.reduce((acc, curr) => acc + curr, 0);
 		timeToZero = $bac / 0.016;
 		timeToTarget = Math.max(0, ($bac - $target) / 0.016);
+		timeOfZero = dayjs().add(timeToZero, 'hours');
+		timeOfTarget = dayjs().add(timeToTarget, 'hours');
+		if ($bac > 0.2) {
+			stateInWords = 'Dangerous impairment';
+		} else if ($bac > 0.15) {
+			stateInWords = 'Severe impairment';
+		} else if ($bac > 0.1) {
+			stateInWords = 'Serious impairment';
+		} else if ($bac > 0.08) {
+			stateInWords = 'High impairment';
+		} else if ($bac > 0.04) {
+			stateInWords = 'Moderate impairment';
+		} else if ($bac > 0.02) {
+			stateInWords = 'Some impairment';
+		} else if ($bac > 0) {
+			stateInWords = 'Minimal impairment';
+		} else {
+			stateInWords = 'Sober';
+		}
 	}
 </script>
 
@@ -123,23 +146,23 @@
 				<ul class="list py-4">
 					<li>
 						<span>&bullet;</span>
+						<span>
+							You <strong>MUST NOT</strong> use this app to estimate when you may be below a drink-driving
+							limit, or safe to operate heavy machinery, etc.</span
+						>
+					</li>
+					<li>
+						<span>&bullet;</span>
 						<span
-							>This app <strong>MUST NOT</strong> be considered definitively correct for any purposes
-							other than personal information.</span
+							>This app <strong>MUST NOT</strong> be used for any purpose other than out of personal
+							curiosity. The numbers it creates are at best guesses.</span
 						>
 					</li>
 					<li>
 						<span>&bullet;</span>
 						<span>You <strong>MUST NOT</strong> rely on this app for making decisions.</span>
 					</li>
-					<li>
-						<span>&bullet;</span>
-						<span>
-							You <strong>MUST NOT</strong> use this app to estimate when you may be below a drink-driving
-							limit, or safe to operate heavy machinery, etc. (note: these are examples only, not a definitive
-							list)</span
-						>
-					</li>
+
 					<p>
 						This app is available as-is, with no warranty express or implied. You must not rely on
 						this app to inform decisions.
@@ -147,16 +170,19 @@
 				</ul>
 				<button on:click={() => ($hasReadDisclaimer = true)}>I understand and agree</button>
 			{:else}
+				<div class="w-full text-center text-2xl" />
 				<div class="flex gap-2 justify-between my-2 text-center">
 					<div>
 						<p>Current BAC</p>
 						<h2 class="h1">{$bac.toFixed(4)}</h2>
+						<small>{stateInWords}</small>
 					</div>
 					<div>
 						<p>Time To Zero</p>
 						<h2 class="h1">
 							{Math.floor(timeToZero)}h{Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
 						</h2>
+						<small>{timeToZero ? timeOfZero.format('hh:mm a') : ''}</small>
 					</div>
 					<div>
 						<p>Time To Target</p>
@@ -165,6 +191,7 @@
 								(timeToTarget - Math.floor(timeToTarget)) * 60
 							)}m
 						</h2>
+						<small>{timeToTarget ? timeOfTarget.format('hh:mm a') : ''}</small>
 					</div>
 				</div>
 
@@ -277,8 +304,8 @@
 								<td class="hidden lg:table-cell">{drink.bac.toFixed(4)}</td>
 								<td>{drink.bacAtStart.toFixed(4)}</td>
 								<td
-									>{(drink.datetime.getHours() + '').padStart(2, '0')}:{(
-										drink.datetime.getMinutes() + ''
+									>{(drink.datetime.getUTCHours() + '').padStart(2, '0')}:{(
+										drink.datetime.getUTCMinutes() + ''
 									).padStart(2, '0')}</td
 								>
 								<td
@@ -293,7 +320,7 @@
 							</tr>
 						{:else}
 							<tr>
-								<td>No drinks</td>
+								<td colspan="4">No drinks</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -354,7 +381,8 @@
 		<div class="container p-4">
 			<small
 				>Reminder: this app is not to be used to calculate BAC with accuracy, and should not be
-				relied on for any purpose.</small
+				relied on for any purpose. If you or others around you have concerns about your drinking,
+				seek professional help.</small
 			>
 		</div>
 	</div>
