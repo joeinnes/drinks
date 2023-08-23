@@ -111,7 +111,7 @@
 		timeOfZero = dayjs().add(timeToZero, 'hours');
 		timeOfTarget = dayjs().add(timeToTarget, 'hours');
 		if ($bac > 0.2) {
-			stateInWords = 'Dangerous impairment';
+			stateInWords = 'Dangerous levels!';
 		} else if ($bac > 0.15) {
 			stateInWords = 'Severe impairment';
 		} else if ($bac > 0.1) {
@@ -119,9 +119,9 @@
 		} else if ($bac > 0.08) {
 			stateInWords = 'High impairment';
 		} else if ($bac > 0.04) {
-			stateInWords = 'Moderate impairment';
-		} else if ($bac > 0.02) {
 			stateInWords = 'Some impairment';
+		} else if ($bac > 0.02) {
+			stateInWords = 'Mild impairment';
 		} else if ($bac > 0) {
 			stateInWords = 'Minimal impairment';
 		} else {
@@ -304,8 +304,8 @@
 								<td class="hidden lg:table-cell">{drink.bac.toFixed(4)}</td>
 								<td>{drink.bacAtStart.toFixed(4)}</td>
 								<td
-									>{(drink.datetime.getUTCHours() + '').padStart(2, '0')}:{(
-										drink.datetime.getUTCMinutes() + ''
+									>{(drink.datetime.getHours() + '').padStart(2, '0')}:{(
+										drink.datetime.getMinutes() + ''
 									).padStart(2, '0')}</td
 								>
 								<td
@@ -320,7 +320,7 @@
 							</tr>
 						{:else}
 							<tr>
-								<td colspan="4">No drinks</td>
+								<td colspan="5">No drinks</td>
 							</tr>
 						{/each}
 					</tbody>
