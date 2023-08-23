@@ -293,7 +293,7 @@
 					<thead>
 						<th>Drink</th>
 						<th class="hidden lg:table-cell">BAC Addition</th>
-						<th>BAC at Start</th>
+						<th>BAC<span class="hidden md:inline">at Start</span></th>
 						<th>Time</th>
 						<th>Remove</th>
 					</thead>
