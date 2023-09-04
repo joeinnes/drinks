@@ -1,5 +1,7 @@
 <script>
 	import dayjs from 'dayjs';
+	import relativeTime from 'dayjs/plugin/relativeTime';
+	dayjs.extend(relativeTime);
 	import { localStorageStore, Accordion, AccordionItem, popup } from '@skeletonlabs/skeleton';
 	import { Beer, Delete, GlassWater, Martini, Plus, Settings, Wine } from 'lucide-svelte';
 
@@ -82,6 +84,7 @@
 	let stateInWords = `Sober`;
 	let timeOfTarget = dayjs();
 	let timeOfZero = dayjs();
+	let timeSinceLast = '';
 	onMount(() => {
 		setInterval(() => {
 			$bac = $drinks
@@ -110,6 +113,7 @@
 		timeToTarget = Math.max(0, ($bac - $target) / 0.016);
 		timeOfZero = dayjs().add(timeToZero, 'hours');
 		timeOfTarget = dayjs().add(timeToTarget, 'hours');
+		timeSinceLast = dayjs().to(dayjs($drinks.slice(-1)[0]?.datetime));
 		if ($bac > 0.2) {
 			stateInWords = 'Dangerous levels!';
 		} else if ($bac > 0.15) {
@@ -171,6 +175,7 @@
 				<button on:click={() => ($hasReadDisclaimer = true)}>I understand and agree</button>
 			{:else}
 				<div class="w-full text-center text-2xl" />
+				<p class="text-center">Your last drink was {timeSinceLast}</p>
 				<div class="flex gap-2 justify-between my-2 text-center">
 					<div>
 						<p>Current BAC</p>
@@ -194,7 +199,6 @@
 						<small>{timeToTarget ? timeOfTarget.format('hh:mm a') : ''}</small>
 					</div>
 				</div>
-
 				<div class="flex justify-center my-4 gap-2 flex-wrap">
 					<button
 						on:click={() => addDrink('Small beer', 0.045 * 330)}
