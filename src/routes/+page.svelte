@@ -34,6 +34,10 @@
 	const target = localStorageStore('target', 0.08);
 
 	/**
+	 * @type {import('svelte/store').Writable<number>}
+	 */
+	const weeklyTarget = localStorageStore('weeklyTarget', 14);
+	/**
 	 * @type {import('svelte/store').Writable<boolean>}
 	 */
 	const hasReadDisclaimer = localStorageStore('disclaimer', false);
@@ -100,6 +104,54 @@
 			timeToTarget = Math.max(0, ($bac - $target) / 0.016);
 		}, 1000);
 	});
+
+	// Charts logic
+	import Chart from 'chart.js/auto';
+	/** @type HTMLCanvasElement */
+	let chart;
+	import isoWeek from 'dayjs/plugin/isoWeek';
+	dayjs.extend(isoWeek);
+	/** @type Record<String, number> */
+	let drinksMap = {};
+
+	/** @type {import('chart.js').Chart} */
+	let chartJSObject;
+	onMount(() => {
+		chartJSObject = new Chart(chart, {
+			type: 'line',
+			options: {
+				responsive: true,
+				scales: {
+					y: {
+						beginAtZero: true,
+						ticks: {
+							stepSize: 1
+						}
+					}
+				},
+				plugins: {
+					legend: {
+						display: false
+					}
+				}
+			},
+			data: {
+				labels: Object.keys(drinksMap),
+				datasets: [
+					{
+						data: Object.keys(drinksMap).map((el) => drinksMap[el]),
+						tension: 0.5
+					},
+					{
+						data: Object.keys(drinksMap).map((el) => $weeklyTarget),
+						borderDash: [5, 5],
+						pointRadius: 0
+					}
+				]
+			}
+		});
+	});
+
 	$: {
 		$bac = $drinks
 			.map((el) => {
@@ -130,6 +182,35 @@
 			stateInWords = 'Minimal impairment';
 		} else {
 			stateInWords = 'Sober';
+		}
+
+		for (let i = 7; i >= 0; i--) {
+			let startDate = dayjs().subtract(i, 'week');
+			drinksMap['W' + startDate.isoWeek() + ' ' + startDate.isoWeekYear()] = 0;
+		}
+		$drinks.forEach((drink) => {
+			const drinksmapDrinkDT = dayjs(drink.datetime);
+			let week = 'W' + drinksmapDrinkDT.isoWeek() + ' ' + drinksmapDrinkDT.isoWeekYear();
+			if (drinksMap.hasOwnProperty(week)) {
+				drinksMap[week] = drinksMap[week] + drink.volume / 10;
+			}
+		});
+		if (chartJSObject) {
+			chartJSObject.data = {
+				labels: Object.keys(drinksMap),
+				datasets: [
+					{
+						data: Object.keys(drinksMap).map((el) => drinksMap[el]),
+						tension: 0.5
+					},
+					{
+						data: Object.keys(drinksMap).map((el) => $weeklyTarget),
+						borderDash: [5, 5],
+						pointRadius: 0
+					}
+				]
+			};
+			chartJSObject?.update('none');
 		}
 	}
 </script>
@@ -175,8 +256,10 @@
 				<button on:click={() => ($hasReadDisclaimer = true)}>I understand and agree</button>
 			{:else}
 				<div class="w-full text-center text-2xl" />
-				<p class="text-center">Your last drink was {timeSinceLast}</p>
-				<div class="flex gap-2 justify-between my-2 text-center">
+				{#if $drinks.length}
+					<p class="text-center">Your last drink was {timeSinceLast}</p>
+				{/if}
+				<div class="flex gap-2 justify-around my-2 text-center">
 					<div>
 						<p>Current BAC</p>
 						<h2 class="h1">{$bac.toFixed(4)}</h2>
@@ -297,7 +380,7 @@
 					<thead>
 						<th>Drink</th>
 						<th class="hidden lg:table-cell">BAC Addition</th>
-						<th>BAC<span class="hidden md:inline">at Start</span></th>
+						<th>BAC <span class="hidden md:inline">at Start</span></th>
 						<th>Time</th>
 						<th>Remove</th>
 					</thead>
@@ -348,6 +431,39 @@
 				</div>
 			{/if}
 		</section>
+
+		<section class="card p-4 w-full">
+			<h2 class="mb-4 h3">How Much Have You Been Drinking?</h2>
+			<canvas bind:this={chart} />
+			<div class="flex gap-2 justify-around my-2 text-center">
+				<div>
+					<p>Average Weekly Units</p>
+					<h2 class="h1">
+						{(
+							Object.values(drinksMap).reduce((acc, curr) => acc + curr, 0) /
+							Object.keys(drinksMap).length
+						).toFixed(2)}
+					</h2>
+				</div>
+				<div>
+					<p>Excess Weeks</p>
+					<h2 class="h1">
+						{Object.values(drinksMap).filter((el) => el > $weeklyTarget).length}
+					</h2>
+				</div>
+			</div>
+			<p class="hidden">
+				<small
+					>Note that it is the current UK guidelines that both men and women do not exceed 14 units
+					per week, spread out over at least three days. This is lower than most European countries
+					for men, and about average for women. A unit is 10ml of pure alcohol.New guidance says
+					that there is no safe level of alcohol to drink during pregnancy. It is recommended not to
+					drink while breastfeeding, although it is unlikely to harm the baby if you have a single
+					drink and wait at least 2 hours before feeding. Studies have not shown that 'pumping and
+					dumping' is effective to remove alcohol from breast milk.</small
+				>
+			</p>
+		</section>
 		<section class="card p-4">
 			<Accordion>
 				<AccordionItem>
@@ -361,6 +477,10 @@
 						<label class="label">
 							<span>Target Maximum BAC</span>
 							<input type="number" bind:value={$target} step="0.01" class="input" />
+						</label>
+						<label class="label">
+							<span>Target Maximum Units Per Week</span>
+							<input type="number" bind:value={$weeklyTarget} step="1" class="input" />
 						</label>
 						<p class="label">Gender</p>
 						<label class="label">
