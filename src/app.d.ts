@@ -6,4 +6,7 @@ declare namespace App {
 	// interface PageData {}
 	// interface Error {}
 	// interface Platform {}
+	interface Drink {
+		name: string; bac: number; bacAtStart: number; datetime: Date; volume: number;
+	}
 }
