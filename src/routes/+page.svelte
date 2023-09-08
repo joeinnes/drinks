@@ -1,61 +1,29 @@
 <script>
-	import dayjs from 'dayjs';
-	import relativeTime from 'dayjs/plugin/relativeTime';
-	dayjs.extend(relativeTime);
-	import { localStorageStore, Accordion, AccordionItem, popup } from '@skeletonlabs/skeleton';
-	import { Beer, Delete, GlassWater, Martini, Plus, Settings, Wine } from 'lucide-svelte';
+	// Library Components
+	import { Accordion, AccordionItem, popup } from '@skeletonlabs/skeleton';
+	import { Beer, Delete, GlassWater, Martini, Plus, Wine } from 'lucide-svelte';
 
-	/** @typedef {{ name: string, bac: number, bacAtStart: number, datetime: Date, volume: number }} Drink */
+	// My Code
+	import { calculateBacAddition } from '$lib/utilities/utilities';
+	import {
+		drinks,
+		drinksStringDates,
+		gender,
+		weight,
+		bac,
+		target,
+		hasReadDisclaimer,
+		timeToTarget,
+		timeToZero,
+		timeOfZero,
+		timeOfTarget,
+		timeSinceLast
+	} from '$lib/stores/stores';
 
-	import { onMount } from 'svelte';
-	/**
-	 * @type {import('svelte/store').Writable<Drink[]>}
-	 */
-	const drinks = localStorageStore('drinks', []);
-	$drinks = $drinks.map((el) => {
-		el.datetime = new Date(el.datetime);
-		return el;
-	});
-	/**
-	 * @type {import('svelte/store').Writable<'m' | 'f'>}
-	 */
-	const gender = localStorageStore('gender', 'm');
-	/**
-	 * @type {import('svelte/store').Writable<number>}
-	 */
-	const weight = localStorageStore('weight', 85000);
-	/**
-	 * @type {import('svelte/store').Writable<number>}
-	 */
-	const bac = localStorageStore('bac', 0);
-	/**
-	 * @type {import('svelte/store').Writable<number>}
-	 */
-	const target = localStorageStore('target', 0.08);
-
-	/**
-	 * @type {import('svelte/store').Writable<number>}
-	 */
-	const weeklyTarget = localStorageStore('weeklyTarget', 14);
-	/**
-	 * @type {import('svelte/store').Writable<boolean>}
-	 */
-	const hasReadDisclaimer = localStorageStore('disclaimer', false);
-
-	// Widmark formula gender constant
-	const r = {
-		f: 0.55,
-		m: 0.68
-	};
-
-	/** @param {number} volume
-	 *   @param {number} storeWeight
-	 *   @param {'m'|'f'} storeGender */
-
-	const calculateBacAddition = (volume, storeWeight, storeGender) => {
-		const alcoholDose = volume * 0.7893; // 0.789 is alcohol's weight:volume ratio
-		return (alcoholDose / (storeWeight * r[storeGender])) * 100;
-	};
+	// My Components
+	import ChartPanel from '$lib/components/ChartPanel.svelte';
+	import SettingsMenu from '$lib/components/SettingsMenu.svelte';
+	import Metric from '$lib/components/Metric.svelte';
 
 	/**
 	 * @param {string} name
@@ -70,8 +38,8 @@
 			bacAtStart: $bac,
 			datetime: new Date()
 		};
-		$drinks = [...$drinks, drinkToAdd];
-		$drinks.sort((a, b) => (a.datetime > b.datetime ? -1 : 1));
+		$drinksStringDates = [...$drinks, drinkToAdd];
+		$drinksStringDates.sort((a, b) => (a.datetime > b.datetime ? -1 : 1));
 	};
 
 	/** @type {import('@skeletonlabs/skeleton').PopupSettings}*/
@@ -80,92 +48,12 @@
 		target: 'resetDrinks',
 		placement: 'top'
 	};
-	let timeToZero = 0;
-	let timeToTarget = 0;
 	let customName = 'Spirit shot';
 	let customVolume = 40;
 	let customPercent = 40;
 	let stateInWords = `Sober`;
-	let timeOfTarget = dayjs();
-	let timeOfZero = dayjs();
-	let timeSinceLast = '';
-	onMount(() => {
-		setInterval(() => {
-			$bac = $drinks
-				.map((el) => {
-					let currentDate = new Date();
-					let timeSinceStart = currentDate.valueOf() - el.datetime.valueOf();
-					let currentBac = Math.max(el.bac - 0.016 * (timeSinceStart / (1000 * 60 * 60)), 0);
-					el.bac = calculateBacAddition(el.volume, $weight, $gender);
-					return currentBac;
-				})
-				.reduce((acc, curr) => acc + curr, 0);
-			timeToZero = $bac / 0.016;
-			timeToTarget = Math.max(0, ($bac - $target) / 0.016);
-		}, 1000);
-	});
-
-	// Charts logic
-	import Chart from 'chart.js/auto';
-	/** @type HTMLCanvasElement */
-	let chart;
-	import isoWeek from 'dayjs/plugin/isoWeek';
-	dayjs.extend(isoWeek);
-	/** @type Record<String, number> */
-	let drinksMap = {};
-
-	/** @type {import('chart.js').Chart} */
-	let chartJSObject;
-	onMount(() => {
-		chartJSObject = new Chart(chart, {
-			type: 'line',
-			options: {
-				responsive: true,
-				scales: {
-					y: {
-						beginAtZero: true,
-						ticks: {
-							stepSize: 1
-						}
-					}
-				},
-				plugins: {
-					legend: {
-						display: false
-					}
-				}
-			},
-			data: {
-				labels: Object.keys(drinksMap),
-				datasets: [
-					{
-						data: Object.keys(drinksMap).map((el) => drinksMap[el]),
-						tension: 0.5
-					},
-					{
-						data: Object.keys(drinksMap).map((el) => $weeklyTarget),
-						borderDash: [5, 5],
-						pointRadius: 0
-					}
-				]
-			}
-		});
-	});
 
 	$: {
-		$bac = $drinks
-			.map((el) => {
-				let currentDate = new Date();
-				let timeSinceStart = currentDate.valueOf() - el.datetime.valueOf();
-				let currentBac = Math.max(el.bac - 0.016 * (timeSinceStart / (1000 * 60 * 60)), 0);
-				return currentBac;
-			})
-			.reduce((acc, curr) => acc + curr, 0);
-		timeToZero = $bac / 0.016;
-		timeToTarget = Math.max(0, ($bac - $target) / 0.016);
-		timeOfZero = dayjs().add(timeToZero, 'hours');
-		timeOfTarget = dayjs().add(timeToTarget, 'hours');
-		timeSinceLast = dayjs().to(dayjs($drinks.slice(-1)[0]?.datetime));
 		if ($bac > 0.2) {
 			stateInWords = 'Dangerous levels!';
 		} else if ($bac > 0.15) {
@@ -182,35 +70,6 @@
 			stateInWords = 'Minimal impairment';
 		} else {
 			stateInWords = 'Sober';
-		}
-
-		for (let i = 7; i >= 0; i--) {
-			let startDate = dayjs().subtract(i, 'week');
-			drinksMap['W' + startDate.isoWeek() + ' ' + startDate.isoWeekYear()] = 0;
-		}
-		$drinks.forEach((drink) => {
-			const drinksmapDrinkDT = dayjs(drink.datetime);
-			let week = 'W' + drinksmapDrinkDT.isoWeek() + ' ' + drinksmapDrinkDT.isoWeekYear();
-			if (drinksMap.hasOwnProperty(week)) {
-				drinksMap[week] = drinksMap[week] + drink.volume / 10;
-			}
-		});
-		if (chartJSObject) {
-			chartJSObject.data = {
-				labels: Object.keys(drinksMap),
-				datasets: [
-					{
-						data: Object.keys(drinksMap).map((el) => drinksMap[el]),
-						tension: 0.5
-					},
-					{
-						data: Object.keys(drinksMap).map((el) => $weeklyTarget),
-						borderDash: [5, 5],
-						pointRadius: 0
-					}
-				]
-			};
-			chartJSObject?.update('none');
 		}
 	}
 </script>
@@ -257,30 +116,24 @@
 			{:else}
 				<div class="w-full text-center text-2xl" />
 				{#if $drinks.length}
-					<p class="text-center">Your last drink was {timeSinceLast}</p>
+					<p class="text-center">Your last drink was {$timeSinceLast}</p>
 				{/if}
 				<div class="flex gap-2 justify-around my-2 text-center">
-					<div>
-						<p>Current BAC</p>
-						<h2 class="h1">{$bac.toFixed(4)}</h2>
-						<small>{stateInWords}</small>
-					</div>
-					<div>
-						<p>Time To Zero</p>
-						<h2 class="h1">
-							{Math.floor(timeToZero)}h{Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
-						</h2>
-						<small>{timeToZero ? timeOfZero.format('hh:mm a') : ''}</small>
-					</div>
-					<div>
-						<p>Time To Target</p>
-						<h2 class="h1">
-							{Math.floor(timeToTarget)}h{Math.round(
-								(timeToTarget - Math.floor(timeToTarget)) * 60
-							)}m
-						</h2>
-						<small>{timeToTarget ? timeOfTarget.format('hh:mm a') : ''}</small>
-					</div>
+					<Metric title="Current BAC" subtitle={stateInWords} value={$bac.toFixed(4)} />
+					<Metric
+						title="Time To Zero"
+						value={`${Math.floor($timeToZero)}h${Math.round(
+							($timeToZero - Math.floor($timeToZero)) * 60
+						)}m`}
+						subtitle={$timeToZero ? $timeOfZero.format('h:mm a') : ''}
+					/>
+					<Metric
+						title="Time To Target"
+						value={`${Math.floor($timeToTarget)}h${Math.round(
+							($timeToTarget - Math.floor($timeToTarget)) * 60
+						)}m`}
+						subtitle={$timeToTarget ? $timeOfTarget.format('hh:mm a') : ''}
+					/>
 				</div>
 				<div class="flex justify-center my-4 gap-2 flex-wrap">
 					<button
@@ -399,8 +252,8 @@
 									><button
 										class="unique btn btn-icon variant-soft-error"
 										on:click|preventDefault={() => {
-											$drinks.splice(i, 1);
-											$drinks = $drinks;
+											$drinksStringDates.splice(i, 1);
+											$drinksStringDates = $drinksStringDates;
 										}}><Delete /></button
 									></td
 								>
@@ -423,8 +276,9 @@
 					<p>Are you sure? This will delete all of your drinks history and cannot be undone!</p>
 					<div class="flex flex-col md:flex-row justify-end">
 						<button class="unique btn variant-ghost-warning">Cancel</button>
-						<button class="unique btn variant-filled-error" on:click={() => ($drinks = [])}
-							>Delete history</button
+						<button
+							class="unique btn variant-filled-error"
+							on:click={() => ($drinksStringDates = [])}>Delete history</button
 						>
 					</div>
 					<div class="arrow variant-filled-warning" />
@@ -432,76 +286,8 @@
 			{/if}
 		</section>
 
-		<section class="card p-4 w-full">
-			<h2 class="mb-4 h3">How Much Have You Been Drinking?</h2>
-			<canvas bind:this={chart} />
-			<div class="flex gap-2 justify-around my-2 text-center">
-				<div>
-					<p>Average Weekly Units</p>
-					<h2 class="h1">
-						{(
-							Object.values(drinksMap).reduce((acc, curr) => acc + curr, 0) /
-							Object.keys(drinksMap).length
-						).toFixed(2)}
-					</h2>
-				</div>
-				<div>
-					<p>Excess Weeks</p>
-					<h2 class="h1">
-						{Object.values(drinksMap).filter((el) => el > $weeklyTarget).length}
-					</h2>
-				</div>
-			</div>
-			<p class="hidden">
-				<small
-					>Note that it is the current UK guidelines that both men and women do not exceed 14 units
-					per week, spread out over at least three days. This is lower than most European countries
-					for men, and about average for women. A unit is 10ml of pure alcohol.New guidance says
-					that there is no safe level of alcohol to drink during pregnancy. It is recommended not to
-					drink while breastfeeding, although it is unlikely to harm the baby if you have a single
-					drink and wait at least 2 hours before feeding. Studies have not shown that 'pumping and
-					dumping' is effective to remove alcohol from breast milk.</small
-				>
-			</p>
-		</section>
-		<section class="card p-4">
-			<Accordion>
-				<AccordionItem>
-					<svelte:fragment slot="lead"><Settings /></svelte:fragment>
-					<svelte:fragment slot="summary">Settings</svelte:fragment>
-					<svelte:fragment slot="content"
-						><label class="label">
-							<span>Weight in grams</span>
-							<input type="number" bind:value={$weight} class="input" />
-						</label>
-						<label class="label">
-							<span>Target Maximum BAC</span>
-							<input type="number" bind:value={$target} step="0.01" class="input" />
-						</label>
-						<label class="label">
-							<span>Target Maximum Units Per Week</span>
-							<input type="number" bind:value={$weeklyTarget} step="1" class="input" />
-						</label>
-						<p class="label">Gender</p>
-						<label class="label">
-							<input
-								type="radio"
-								class="radio"
-								bind:group={$gender}
-								step="0.
-							01"
-								value="m"
-							/><span>Male</span>
-						</label>
-						<label class="label">
-							<input type="radio" class="radio" bind:group={$gender} step="0.01" value="f" /><span
-								>Female</span
-							>
-						</label>
-					</svelte:fragment>
-				</AccordionItem>
-			</Accordion>
-		</section>
+		<ChartPanel />
+		<SettingsMenu />
 		<div class="container p-4">
 			<small
 				>Reminder: this app is not to be used to calculate BAC with accuracy, and should not be
