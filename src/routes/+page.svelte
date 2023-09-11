@@ -5,6 +5,7 @@
 
 	// My Code
 	import { calculateBacAddition } from '$lib/utilities/utilities';
+	import dayjs from '$lib/dayjs';
 	import {
 		drinks,
 		drinksStringDates,
@@ -232,8 +233,8 @@
 				<table class="table">
 					<thead>
 						<th>Drink</th>
-						<th class="hidden lg:table-cell">BAC Addition</th>
-						<th>BAC <span class="hidden md:inline">at Start</span></th>
+						<th class="hidden lg:table-cell">This Drink</th>
+						<th>BAC <span class="hidden md:inline">Peak</span></th>
 						<th>Time</th>
 						<th>Remove</th>
 					</thead>
@@ -242,12 +243,8 @@
 							<tr>
 								<td>{drink.name}</td>
 								<td class="hidden lg:table-cell">{drink.bac.toFixed(4)}</td>
-								<td>{drink.bacAtStart.toFixed(4)}</td>
-								<td
-									>{(drink.datetime.getHours() + '').padStart(2, '0')}:{(
-										drink.datetime.getMinutes() + ''
-									).padStart(2, '0')}</td
-								>
+								<td>{(drink.bacAtStart + drink.bac).toFixed(4)}</td>
+								<td>{dayjs(drink.datetime).fromNow()}</td>
 								<td
 									><button
 										class="unique btn btn-icon variant-soft-error"
