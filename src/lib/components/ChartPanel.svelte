@@ -13,6 +13,7 @@
 	dayjs.extend(isoWeek);
 	/** @type Record<String, number> */
 	let drinksMap = {};
+	let excessDays = 0;
 
 	/** @type {import('chart.js').Chart} */
 	let chartJSObject;
@@ -53,6 +54,16 @@
 	});
 
 	$: {
+		const unitsPerDay = $drinks.reduce((acc, curr) => {
+			const dateOfDrink = dayjs(curr.datetime).format('YYYY-MM-DD');
+			if (acc[dateOfDrink]) {
+				acc[dateOfDrink] = acc[dateOfDrink] + curr.volume / 10;
+			} else {
+				acc[dateOfDrink] = curr.volume / 10;
+			}
+			return acc;
+		}, /** @type Record<string, number> */ ({}));
+		excessDays = Object.values(unitsPerDay).filter((el) => el > $weeklyTarget / 3).length; // Note: recommendation from NHS is that drinks should be spread over 3 or more days: https://www.nhs.uk/conditions/alcohol-misuse/
 		for (let i = 7; i >= 0; i--) {
 			let startDate = dayjs().subtract(i, 'week');
 			drinksMap['W' + startDate.isoWeek() + ' ' + startDate.isoWeekYear()] = 0;
@@ -90,6 +101,15 @@
 	<canvas bind:this={chart} />
 	<div class="flex gap-2 justify-around my-2 text-center">
 		<Metric
+			title="Average Daily Units"
+			value={(
+				Object.values(drinksMap).reduce((acc, curr) => acc + curr, 0) /
+				Object.keys(drinksMap).length /
+				7
+			).toFixed(2)}
+		/>
+
+		<Metric
 			title="Average Weekly Units"
 			value={(
 				Object.values(drinksMap).reduce((acc, curr) => acc + curr, 0) /
@@ -101,7 +121,10 @@
 			title="Excess Weeks"
 			value={Object.values(drinksMap).filter((el) => el > $weeklyTarget).length + ''}
 		/>
+
+		<Metric title="Excess Days" value={excessDays + ''} />
 	</div>
+
 	<p class="hidden">
 		<small
 			>Note that it is the current UK guidelines that both men and women do not exceed 14 units per
