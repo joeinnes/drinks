@@ -244,7 +244,7 @@
 								<td>{drink.name}</td>
 								<td class="hidden lg:table-cell">{drink.bac.toFixed(4)}</td>
 								<td>{(drink.bacAtStart + drink.bac).toFixed(4)}</td>
-								<td>{dayjs(drink.datetime).fromNow()}</td>
+								<td><span class="hidden md:inline">{dayjs(drink.datetime).fromNow()}</span><span class="md:hidden">{dayjs(drink.datetime).format("HH:mm)}</span></td>
 								<td
 									><button
 										class="unique btn btn-icon variant-soft-error"
