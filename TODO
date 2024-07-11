@@ -1,0 +1,4 @@
+[ ] Show date in table view on mobile, not just hour
+[ ] Reset date of custom drink on draw open
+[ ] Investigate 'no drinks recorded' in top panel not updating.
+[ ] Add loading screen while data is being read from local storage.
