@@ -1,23 +1,22 @@
 <script>
-	import { onMount } from 'svelte';
-
 	import dayjs from '$lib/dayjs';
-	import { drinks, weeklyTarget } from '$lib/stores/stores';
+	import { drinks, weeklyTarget } from '$lib/stores/stores.svelte.js';
 
 	import Metric from '$lib/components/Metric.svelte';
 	// Charts logic
 	import Chart from 'chart.js/auto';
-	/** @type HTMLCanvasElement */
-	let chart;
+	/** @type { HTMLCanvasElement | undefined }  */
+	let chart = $state();
 	import isoWeek from 'dayjs/plugin/isoWeek';
 	dayjs.extend(isoWeek);
 	/** @type Record<String, number> */
-	let drinksMap = {};
-	let excessDays = 0;
+	let drinksMap = $state({});
+	let excessDays = $state(0);
 
-	/** @type {import('chart.js').Chart} */
-	let chartJSObject;
-	onMount(() => {
+	/** @type {import('chart.js').Chart | undefined} */
+	let chartJSObject = $state();
+	$effect(() => {
+		if (!chart) return;
 		chartJSObject = new Chart(chart, {
 			type: 'line',
 			options: {
@@ -53,7 +52,7 @@
 		});
 	});
 
-	$: {
+	$effect(() => {
 		const unitsPerDay = $drinks.reduce((acc, curr) => {
 			const dateOfDrink = dayjs(curr.datetime).format('YYYY-MM-DD');
 			if (acc[dateOfDrink]) {
@@ -93,13 +92,13 @@
 			};
 			chartJSObject?.update('none');
 		}
-	}
+	});
 </script>
 
-<section class="card p-4 w-full">
-	<h2 class="mb-4 h3">How Much Have You Been Drinking?</h2>
+<section>
+	<h2>How Much Have You Been Drinking?</h2>
 	<canvas bind:this={chart} />
-	<div class="flex gap-2 justify-around my-2 text-center">
+	<div>
 		<Metric
 			title="Average Daily Units"
 			value={(
@@ -125,7 +124,7 @@
 		<Metric title="Excess Days" value={excessDays + ''} />
 	</div>
 
-	<p class="hidden">
+	<p>
 		<small
 			>Note that it is the current UK guidelines that both men and women do not exceed 14 units per
 			week, spread out over at least three days. This is lower than most European countries for men,
