@@ -104,6 +104,16 @@
 		});
 		return map;
 	});
+	let stateInWords = $derived.by(() => {
+		if (bac > 0.2) return 'Dangerous levels!';
+		if (bac > 0.15) return 'Severe impairment';
+		if (bac > 0.1) return 'Serious impairment';
+		if (bac > 0.08) return 'High impairment';
+		if (bac > 0.04) return 'Some impairment';
+		if (bac > 0.02) return 'Mild impairment';
+		if (bac > 0) return 'Minimal impairment';
+		return 'Sober';
+	});
 
 	/**
 	 * @param {string} name
@@ -178,7 +188,7 @@
 				<div>
 					<h3 class="text-sm">Current BAC</h3>
 					<p class="font-black text-2xl">{bac.toFixed(4)}</p>
-					<small />
+					<small>{stateInWords}</small>
 				</div>
 				<div>
 					<h3 class="text-sm">Time to Zero</h3>
@@ -291,8 +301,8 @@
 				<Table.Header>
 					<Table.Row>
 						<Table.Head>Drink</Table.Head>
-						<Table.Head class="hidden md:table-cell">This Drink</Table.Head>
-						<Table.Head>BAC<span class="hidden md:inline">&nbsp;Maximum</span></Table.Head>
+						<Table.Head class="hidden md:table-cell">This Drink Added</Table.Head>
+						<Table.Head>BAC<span class="hidden md:inline">&nbsp;After This Drink</span></Table.Head>
 						<Table.Head>Time</Table.Head>
 						<Table.Head class="text-center">Remove</Table.Head>
 					</Table.Row>
