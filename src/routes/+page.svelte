@@ -10,7 +10,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Pagination from '$lib/components/ui/pagination';
-	import * as RadioGroup from '$lib/components/ui/radio-group/index.js';
+	import * as Select from '$lib/components/ui/select';
 	import * as Table from '$lib/components/ui/table';
 
 	import useLocalStorage from '$lib/stores/stores.svelte';
@@ -36,6 +36,7 @@
 	let customName = $state('Spirit shot');
 	let customPercent = $state(40);
 	let customVolume = $state(40);
+	let customTime = $state(dayjs());
 	let page = $state(1);
 
 	let bac = $derived.by(() => {
@@ -93,7 +94,6 @@
 	let drinksMap = $derived.by(() => {
 		let map = {};
 		drinks.value.forEach((drink) => {
-			console.log(drink);
 			const drinksmapDrinkDT = dayjs(drink.datetime);
 			let week = 'W' + drinksmapDrinkDT.isoWeek() + ' ' + drinksmapDrinkDT.isoWeekYear();
 			if (map.hasOwnProperty(week)) {
@@ -108,15 +108,16 @@
 	/**
 	 * @param {string} name
 	 * @param {number} volume
+	 * @param {string} [time]
 	 */
-	const addDrink = (name, volume) => {
+	const addDrink = (name, volume, time) => {
 		/** type Drink */
 		const drinkToAdd = {
 			name,
 			volume,
 			bac: calculateBacAddition(volume, weight.value, gender.value),
 			bacAtStart: bac,
-			datetime: new Date()
+			datetime: time ? dayjs(time).toDate() : new Date()
 		};
 		drinks.value = [...drinks.value, drinkToAdd];
 	};
@@ -124,7 +125,10 @@
 	setInterval(() => (tick = new Date().getTime()), 1000);
 </script>
 
-<h1 class="text-center text-4xl font-bold">Drinks</h1>
+<div class="flex items-center justify-center gap-2">
+	<img src="/beer_logo.svg" class="w-16 h-16" alt="Logo" />
+	<h1 class="text-6xl font-bold">Drinks</h1>
+</div>
 <main class="p-2 space-y-4">
 	{#if !hasReadDisclaimer.value}
 		<Card.Root>
@@ -136,7 +140,7 @@
 					This app uses some calculations to guess approximately what your blood alcohol content is
 					based on what you have had to drink and when.
 				</p>
-				<ul class="list-disc">
+				<ul class="list-disc list-inside">
 					<li>
 						<span>
 							You <strong>MUST NOT</strong> use this app to estimate when you may be below a drink-driving
@@ -257,12 +261,14 @@
 							<Input name="volume" id="volume" type="number" bind:value={customVolume} />
 							<Label for="percent">Percentage</Label>
 							<Input name="percent" id="percent" type="number" bind:value={customPercent} />
+							<Label for="time">Time</Label>
+							<Input name="time" id="time" type="datetime-local" bind:value={customTime} />
 						</div>
 						<Drawer.Footer>
 							<Drawer.Close>
 								<Button
 									onclick={() => {
-										addDrink(customName, customVolume * (customPercent / 100));
+										addDrink(customName, customVolume * (customPercent / 100), customTime);
 										customName = 'Spirit shot';
 										customVolume = 40;
 										customPercent = 40;
@@ -285,20 +291,26 @@
 				<Table.Header>
 					<Table.Row>
 						<Table.Head>Drink</Table.Head>
-						<Table.Head>BAC</Table.Head>
+						<Table.Head class="hidden md:table-cell">This Drink</Table.Head>
+						<Table.Head>BAC<span class="hidden md:inline">&nbsp;Maximum</span></Table.Head>
 						<Table.Head>Time</Table.Head>
-						<Table.Head>Remove</Table.Head>
+						<Table.Head class="text-center">Remove</Table.Head>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
 					{#each sortedDrinks.slice((page - 1) * 10, (page - 1) * 10 + 10) as drink, i (i)}
 						<Table.Row>
-							<Table.Cell class="font-medium">{drink.name}</Table.Cell>
+							<Table.Cell class="font-semibold">{drink.name}</Table.Cell>
+							<Table.Cell class="hidden md:table-cell">{drink.bac.toFixed(4)}</Table.Cell>
 							<Table.Cell>{drink.bac.toFixed(4)}</Table.Cell>
-							<Table.Cell>{dayjs(drink.datetime).format('HH:mm')}</Table.Cell>
 							<Table.Cell
+								><span class="hidden md:inline">{dayjs(drink.datetime).fromNow()}</span><span
+									class="inline md:hidden">{dayjs(drink.datetime).format('HH:mm')}</span
+								></Table.Cell
+							>
+							<Table.Cell class="text-center"
 								><Button
-									variant="outline"
+									variant="secondary"
 									size="icon"
 									onclick={(e) => {
 										e.preventDefault();
@@ -360,7 +372,7 @@
 								7
 							).toFixed(2)
 						)
-							? ' '
+							? '0'
 							: (
 									Object.values(drinksMap).reduce((acc, curr) => acc + curr, 0) /
 									Object.keys(drinksMap).length /
@@ -377,7 +389,7 @@
 								Object.keys(drinksMap).length
 							).toFixed(2)
 						)
-							? ' '
+							? '0'
 							: (
 									Object.values(drinksMap).reduce((acc, curr) => acc + curr, 0) /
 									Object.keys(drinksMap).length
@@ -438,21 +450,20 @@
 					/>
 
 					<Label for="gender">Gender</Label>
-					<RadioGroup.Root
-						value={gender.value}
-						onValueChange={(e) => {
-							gender.value = e;
+					<Select.Root
+						onSelectedChange={(e) => {
+							gender.value = e.value;
 						}}
+						selected={{ value: gender.value, label: gender.value === 'f' ? 'Female' : 'Male' }}
 					>
-						<div class="flex items-center space-x-2">
-							<RadioGroup.Item value="m" id="m" />
-							<Label for="m">Male</Label>
-						</div>
-						<div class="flex items-center space-x-2">
-							<RadioGroup.Item value="f" id="f" />
-							<Label for="f">Female</Label>
-						</div>
-					</RadioGroup.Root>
+						<Select.Trigger>
+							<Select.Value placeholder="Gender" />
+						</Select.Trigger>
+						<Select.Content>
+							<Select.Item value="m" isSelected={gender.value === 'm'}>Male</Select.Item>
+							<Select.Item value="f" isSelected={gender.value === 'f'}>Female</Select.Item>
+						</Select.Content>
+					</Select.Root>
 				</div>
 				<Drawer.Footer>
 					<Drawer.Close asChild let:builder>
