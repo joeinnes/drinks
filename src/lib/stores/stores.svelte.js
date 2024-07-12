@@ -1,15 +1,40 @@
-import { derived, get, readable } from 'svelte/store';
-import { localStorageStore } from '@skeletonlabs/skeleton';
 import dayjs from '$lib/dayjs';
 import { calculateBacAddition } from '$lib/utilities/utilities';
 
-/**
- * @type {import('svelte/store').Writable<App.Drink[]>}
- */
-const drinksStringDates = localStorageStore('drinks', []);
-/**
- * @type {import('svelte/store').Readable<App.Drink[]>}
- */
+import { onMount } from 'svelte';
+
+const useLocalStorage = (key, initialValue) => {
+	let value = $state(initialValue);
+
+	onMount(() => {
+		const currentValue = localStorage.getItem(key);
+		if (currentValue) value = JSON.parse(currentValue);
+	});
+
+	const save = () => {
+		if (value) {
+			localStorage.setItem(key, JSON.stringify(value));
+		} else {
+			localStorage.removeItem(key);
+		}
+	};
+
+	return {
+		get value() {
+			return value;
+		},
+		set value(v) {
+			value = v;
+			save();
+		}
+	};
+};
+
+export default useLocalStorage;
+
+/*
+const drinksStringDates = localStore('drinks', []);
+
 const drinks = derived(drinksStringDates, ($drinks) =>
 	$drinks
 		.map((el) => ({
@@ -18,33 +43,18 @@ const drinks = derived(drinksStringDates, ($drinks) =>
 		}))
 		.sort((a, b) => (a.datetime.valueOf() - b.datetime.valueOf() > 0 ? -1 : 1))
 );
-/**
- * @type {import('svelte/store').Writable<'m' | 'f'>}
- */
-const gender = localStorageStore('gender', 'm');
-/**
- * @type {import('svelte/store').Writable<number>}
- */
-const weight = localStorageStore('weight', 85000);
-/**
- * @type {import('svelte/store').Writable<number>}
- */
-// const bac = localStorageStore('bac', 0);
-/**
- * @type {import('svelte/store').Writable<number>}
- */
-const target = localStorageStore('target', 0.08);
 
-/**
- * @type {import('svelte/store').Writable<number>}
- */
-const weeklyTarget = localStorageStore('weeklyTarget', 14);
-/**
- * @type {import('svelte/store').Writable<boolean>}
- */
-const hasReadDisclaimer = localStorageStore('disclaimer', false);
+const gender = localStore('gender', 'm');
 
-const frequency = readable(1000);
+const weight = localStore('weight', 85000);
+
+const target = localStore('target', 0.08);
+
+const weeklyTarget = localStore('weeklyTarget', 14);
+
+const hasReadDisclaimer = localStore('disclaimer', false);
+
+const frequency = localStore(1000);
 const tick = derived(
 	frequency,
 	($frequency, set) => {
@@ -58,8 +68,6 @@ const tick = derived(
 	},
 	1000
 );
-
-// 06:30
 
 const bac = derived([tick, drinks], ([, $drinks]) => {
 	// Define the metabolism rate (0.016% reduction in BAC per hour)
@@ -121,3 +129,4 @@ export {
 	timeOfTarget,
 	timeSinceLast
 };
+*/

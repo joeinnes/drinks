@@ -1,18 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind variants;
 
-:root {
-	--theme-font-family-base: 'Avenir Next', sans-serif;
-	--theme-font-family-heading: 'Avenir Next Condensed', sans-serif;
+@layer base {
+	@layer base {
+		:root {
+			--background: 201 100% 100%;
+			--foreground: 201 5% 10%;
+			--card: 201 50% 100%;
+			--card-foreground: 201 5% 15%;
+			--popover: 201 100% 100%;
+			--popover-foreground: 201 100% 10%;
+			--primary: 201 84.7% 30.8%;
+			--primary-foreground: 0 0% 100%;
+			--secondary: 201 30% 90%;
+			--secondary-foreground: 0 0% 0%;
+			--muted: 163 30% 95%;
+			--muted-foreground: 201 5% 40%;
+			--accent: 163 30% 90%;
+			--accent-foreground: 201 5% 15%;
+			--destructive: 0 100% 50%;
+			--destructive-foreground: 201 5% 100%;
+			--border: 201 30% 82%;
+			--input: 201 30% 50%;
+			--ring: 201 84.7% 30.8%;
+			--radius: 100000px;
+		}
+		.dark {
+			--background: 201 50% 10%;
+			--foreground: 201 5% 100%;
+			--card: 201 50% 10%;
+			--card-foreground: 201 5% 100%;
+			--popover: 201 50% 5%;
+			--popover-foreground: 201 5% 100%;
+			--primary: 201 84.7% 30.8%;
+			--primary-foreground: 0 0% 100%;
+			--secondary: 201 30% 20%;
+			--secondary-foreground: 0 0% 100%;
+			--muted: 163 30% 25%;
+			--muted-foreground: 201 5% 65%;
+			--accent: 163 30% 25%;
+			--accent-foreground: 201 5% 95%;
+			--destructive: 0 100% 50%;
+			--destructive-foreground: 201 5% 100%;
+			--border: 201 30% 50%;
+			--input: 201 30% 50%;
+			--ring: 201 84.7% 30.8%;
+			--radius: 0.3rem;
+		}
+	}
 }
 
-body {
-	font-family: 'Avenir Next';
-}
-
-h1,
-h2 {
-	font-family: 'Avenir Next Condensed' !important;
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-gradient-to-br from-primary to-border text-primary-foreground pt-4;
+	}
+	h1,
+	h2 {
+		font-family: 'Avenir Next Condensed' !important;
+	}
 }
