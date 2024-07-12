@@ -236,16 +236,13 @@
 						: undefined}><Martini class="mr-2" />Spirits/Mixed</Button
 				><Drawer.Root>
 					<Drawer.Trigger asChild let:builder>
-						<Button builders={[builder]}
-							><GlassWater
-								class="mr-2"
-								variant={bac > target.value
-									? 'destructive'
-									: calculateBacAddition(0.375 * 40, weight.value, gender.value) + bac >
-									  target.value
-									? 'secondary'
-									: undefined}
-							/>Custom Drink</Button
+						<Button
+							builders={[builder]}
+							variant={bac > target.value
+								? 'destructive'
+								: calculateBacAddition(0.375 * 40, weight.value, gender.value) + bac > target.value
+								? 'secondary'
+								: undefined}><GlassWater class="mr-2" />Custom Drink</Button
 						>
 					</Drawer.Trigger>
 					<Drawer.Content>
