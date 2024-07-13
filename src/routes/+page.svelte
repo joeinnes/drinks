@@ -181,7 +181,7 @@
 	<Card.Root>
 		<Card.Content class="pt-6">
 			{#if drinks.value.length}
-				<p>Your last drink was {dayjs().to(dayjs(drinks.value[0]?.datetime))}.</p>
+				<p>Your last drink was {dayjs().to(dayjs(sortedDrinks.value[0]?.datetime))}.</p>
 			{:else}<p>No drinks recorded.</p>
 			{/if}
 			<div class="grid grid-cols-3 gap-2 text-center pt-2">
