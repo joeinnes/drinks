@@ -1,6 +1,4 @@
-import dayjs from '$lib/dayjs';
-import { calculateBacAddition } from '$lib/utilities/utilities';
-
+/** Thanks https://userunes.com/ */
 import { onMount } from 'svelte';
 
 const useLocalStorage = (key, initialValue) => {
