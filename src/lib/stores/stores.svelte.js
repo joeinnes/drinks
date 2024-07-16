@@ -1,6 +1,10 @@
 /** Thanks https://userunes.com/ */
 import { onMount } from 'svelte';
 
+/**
+ * @param {string} key
+ * @param {any} initialValue
+ */
 const useLocalStorage = (key, initialValue) => {
 	let value = $state(initialValue);
 
