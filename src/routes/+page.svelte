@@ -20,6 +20,7 @@
 
 	import useLocalStorage from '$lib/stores/stores.svelte';
 	import { calculateBacAddition } from '$lib/utilities/utilities';
+	import UsefulLinksPanel from '$lib/components/UsefulLinksPanel.svelte';
 
 	let loading = useLocalStorage('loading', true);
 
@@ -147,6 +148,7 @@
 	$effect(() => {
 		loading.value = false;
 	});
+	$inspect(drinksMap);
 </script>
 
 <div class="flex items-center justify-center gap-2">
@@ -461,6 +463,46 @@
 				</div>
 			</Card.Content>
 		</Card.Root>
+		<Card.Root>
+			<Card.Header><Card.Title>Last 7 Days</Card.Title></Card.Header>
+			<Card.Content>
+				<div class="grid grid-cols-3 gap-1 text-center">
+					<div class="flex flex-col justify-between">
+						<h3 class="text-xs">Number of Drinks</h3>
+						<p class="text-2xl font-black">
+							{Object.values(drinks.value).filter((el) => {
+								const startDate = dayjs().subtract(7, 'day');
+								return dayjs(el.datetime).isAfter(startDate);
+							})?.length}
+						</p>
+					</div>
+					<div class="flex flex-col justify-between">
+						<h3 class="text-xs">Units Consumed</h3>
+						<p class="text-2xl font-black">
+							{(
+								Object.values(drinks.value).reduce((acc, curr) => {
+									const startDate = dayjs().subtract(7, 'day');
+									if (dayjs(curr.datetime).isAfter(startDate)) {
+										return acc + curr.volume;
+									}
+									return acc;
+								}, 0) / 10
+							).toFixed(0)}
+						</p>
+					</div>
+					<div class="flex flex-col justify-between">
+						<h3 class="text-xs">Days Drinking</h3>
+						<p class="text-2xl font-black">
+							{[
+								...new Set(
+									Object.values(drinks.value).map((el) => dayjs(el.datetime).format('DD-MMM-YYYY'))
+								)
+							].length}
+						</p>
+					</div>
+				</div>
+			</Card.Content>
+		</Card.Root>
 
 		<div class="text-center text-foreground">
 			<Drawer.Root>
@@ -585,6 +627,7 @@
 			</Drawer.Root>
 		</div>
 	{/if}
+	<UsefulLinksPanel />
 </main>
 
 <footer class="p-2">
