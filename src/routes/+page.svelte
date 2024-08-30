@@ -470,7 +470,7 @@
 						<h3 class="text-xs">Number of Drinks</h3>
 						<p class="text-2xl font-black">
 							{Object.values(drinks.value).filter((el) => {
-								const startDate = dayjs().subtract(7, 'day');
+								const startDate = dayjs().subtract(7, 'day').endOf('day');
 								return dayjs(el.datetime).isAfter(startDate);
 							})?.length}
 						</p>
@@ -480,7 +480,7 @@
 						<p class="text-2xl font-black">
 							{(
 								Object.values(drinks.value).reduce((acc, curr) => {
-									const startDate = dayjs().subtract(7, 'day');
+									const startDate = dayjs().subtract(7, 'day').endOf('day');
 									if (dayjs(curr.datetime).isAfter(startDate)) {
 										return acc + curr.volume;
 									}
@@ -494,7 +494,12 @@
 						<p class="text-2xl font-black">
 							{[
 								...new Set(
-									Object.values(drinks.value).map((el) => dayjs(el.datetime).format('DD-MMM-YYYY'))
+									Object.values(drinks.value)
+										.filter((el) => {
+											const startDate = dayjs().subtract(7, 'day').endOf('day');
+											return dayjs(el.datetime).isAfter(startDate);
+										})
+										.map((el) => dayjs(el.datetime).format('DD-MMM-YYYY'))
 								)
 							].length}
 						</p>
