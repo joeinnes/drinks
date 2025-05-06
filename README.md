@@ -1,51 +1,50 @@
-# Drinks
+# Jazz React starter with Tailwind and Demo Auth
 
-## Install Your Own Copy
+A minimal starter template for building apps with **[Jazz](https://jazz.tools)**, React, TailwindCSS, and Demo Auth.
 
-```sh
-npm install
-npm run dev
+## Creating an app
+
+Create a new Jazz app.
+```bash
+npx create-jazz-app@latest
 ```
 
-(or pnpm, etc.)
+Then select "React + Jazz + Demo Auth + Tailwind".
 
-## Roadmap
+## Running locally
 
-### Version 2.X
-- [ ] Configurable week count
-- [ ] Put charts back (when shadcn svelte adds charts from shadcn)
-- [ ] Recalculate ‘starting BAC’ when a drink is deleted.
-- [ ] Some people may prefer to use stone or pounds to input their weight. These are easily convertible, so perhaps these options could also be offered to users.
-- [ ] Refactor it all out of a giant single file
-- [ ] Add app onboading: ask the user for the key details (gender and weight) before the app starts working. By default it is configured for an 85kg male, which will underestimate BAC for females or males who weigh less than 85kg.
-  
-#### Version 2.2
-- [ ] Set up ‘favourite’ drinks - saved custom drinks with predefined volumes and percentages, and offer these buttons to users rather than requiring them to add a custom drink every time.
+Install dependencies:
 
-#### Version 2.1
-- [x] Add ‘get help’ links for people who are struggling with alcohol addiction, and links to taxi companies for those who may be considering whether they might be ‘safe to drive’
-- [X] Add a ‘confirm’ prompt to every drink deletion.
-- [X] Restore 'reset' functionality
+```bash
+npm i
+# or
+yarn
+```
 
-### Version 2.0
-- [x] Add the functionality to set a date/time for a drink, so users can log drinks they forgot to log immediately, or restore drinks they deleted accidentally.
+Then, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
+
+## Learning Jazz
+
+You can start by playing with the form, adding a new field in [./src/schema.ts](./src/schema.ts), 
+and seeing how easy it is to structure your data, and perform basic operations.
+
+To learn more, check out the [full tutorial](https://jazz.tools/docs/react/guide).
+
+## Questions / problems / feedback
+
+If you have feedback, let us know on [Discord](https://discord.gg/utDMjHYg42) or open an issue or PR to fix something that seems wrong.
 
 
-### Version 2.X
+## Configuration: sync server
 
-## Changelog
+By default, the app uses [Jazz Cloud](https://jazz.tools/cloud) (`wss://cloud.jazz.tools`) - so cross-device use, invites and collaboration should just work.
 
-### Version 2.0.1:
-- Bug fixes
-
-### Version 2.0.0:
-- Switch to shadcn
-- Add possibility to record drinks at other times than now
-
-### Version 1.1.0:
-
-- Add 8 week graphs.
-- Add weekly target units.
-- Add 'Time since last drink'
-
-### Version 1.0.0: Initial release
+You can also run a local sync server by running `npx jazz-run sync` and adding the query param `?sync=ws://localhost:4200` to the URL of the example app (for example: `http://localhost:5173/?peer=ws://localhost:4200`), or by setting the `sync` parameter of the `<Jazz.Provider>` provider component in [./src/main.tsx](./src/main.tsx).
