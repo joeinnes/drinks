@@ -96,8 +96,9 @@ export function Settings() {
             />
           </div>
           {drinks && (
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <Button
+                className="w-full"
                 onClick={() =>
                   drinks.forEach((drink: any) => {
                     const newDrink = Drink.create({
@@ -119,6 +120,7 @@ export function Settings() {
                 onClick={() => {
                   window.localStorage.removeItem("drinks");
                 }}
+                className="w-full"
               >
                 Delete old drinks
               </Button>
