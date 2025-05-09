@@ -73,7 +73,7 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
                 getBacAddition(button.volume * button.percent, weight, gender);
               const timeToZero = newBac / DECAY_RATE;
               const timeToTarget = Math.max(
-                (newBac - (me?.root?.myTarget || 0.08)) / DECAY_RATE,
+                (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
                 0
               );
               return (
@@ -133,7 +133,7 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
             })}
 
             <TableRow>
-              <TableCell>
+              <TableCell className="px-0">
                 <AddCustomDrink addDrink={addDrink} bac={bac} />
               </TableCell>
               <TableCell></TableCell>

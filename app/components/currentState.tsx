@@ -16,7 +16,7 @@ export function CurrentState({ currentBac }: { currentBac: number }) {
   const lastDrink = sortedDrinks[0];
   const timeToZero = currentBac / DECAY_RATE;
   const timeToTarget = Math.max(
-    (currentBac - (me?.root?.myTarget || 0.08)) / DECAY_RATE,
+    (currentBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
     0
   );
   return (

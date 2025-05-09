@@ -41,7 +41,7 @@ export function AddCustomDrink({
     bac + getBacAddition((customVolume * customPercent) / 100, weight, gender);
   const timeToZero = newBac / DECAY_RATE;
   const timeToTarget = Math.max(
-    (newBac - (me?.root?.myTarget || 0.08)) / DECAY_RATE,
+    (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
     0
   );
   return (
@@ -61,7 +61,7 @@ export function AddCustomDrink({
               ? "secondary"
               : undefined
           }
-          className="flex w-full mt-2"
+          className="flex w-full"
         >
           <GlassWater className="size-4" />
           Custom
