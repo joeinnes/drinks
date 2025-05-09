@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --background: hsl(60 100% 100%);
+  --foreground: hsl(60 5% 10%);
+  --card: hsl(60 50% 100%);
+  --card-foreground: hsl(60 5% 15%);
+  --popover: hsl(60 100% 100%);
+  --popover-foreground: hsl(60 100% 10%);
+  --primary: hsl(60 85.7% 69.8%);
+  --primary-foreground: hsl(0 0% 0%);
+  --secondary: hsl(60 30% 90%);
+  --secondary-foreground: hsl(0 0% 0%);
+  --muted: hsl(22 30% 95%);
+  --muted-foreground: hsl(60 5% 40%);
+  --accent: hsl(22 30% 90%);
+  --accent-foreground: hsl(60 5% 15%);
+  --destructive: hsl(0 100% 50%);
+  --destructive-foreground: hsl(60 5% 100%);
+  --border: hsl(60 30% 82%);
+  --input: hsl(60 30% 50%);
+  --ring: hsl(60 85.7% 69.8%);
+  --radius: 0.5rem;
+
+  /* Chart variables */
+  --chart-1: hsl(60 80% 60%);
+  --chart-2: hsl(60 40% 80%);
+  --chart-3: hsl(30 80% 60%);
+  --chart-4: hsl(200 80% 60%);
+  --chart-5: hsl(60 10% 50%);
+
+  /* Sidebar variables */
+  --sidebar: hsl(60 60% 98%);
+  --sidebar-foreground: hsl(60 5% 20%);
+  --sidebar-primary: hsl(60 85.7% 69.8%);
+  --sidebar-primary-foreground: hsl(0 0% 0%);
+  --sidebar-accent: hsl(22 30% 90%);
+  --sidebar-accent-foreground: hsl(60 5% 15%);
+  --sidebar-border: hsl(60 30% 85%);
+  --sidebar-ring: hsl(60 85.7% 69.8%);
+}
+.dark {
+  --background: hsl(60 50% 10%);
+  --foreground: hsl(60 5% 100%);
+  --card: hsl(60 50% 10%);
+  --card-foreground: hsl(60 5% 100%);
+  --popover: hsl(60 50% 5%);
+  --popover-foreground: hsl(60 5% 100%);
+  --primary: hsl(60 85.7% 69.8%);
+  --primary-foreground: hsl(0 0% 0%);
+  --secondary: hsl(60 30% 20%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(22 30% 25%);
+  --muted-foreground: hsl(60 5% 65%);
+  --accent: hsl(22 30% 25%);
+  --accent-foreground: hsl(60 5% 95%);
+  --destructive: hsl(0 100% 50%);
+  --destructive-foreground: hsl(60 5% 100%);
+  --border: hsl(60 30% 50%);
+  --input: hsl(60 30% 50%);
+  --ring: hsl(60 85.7% 69.8%);
+  --radius: 0.5rem;
+
+  /* Chart variables */
+  --chart-1: hsl(60 70% 50%);
+  --chart-2: hsl(60 25% 30%);
+  --chart-3: hsl(30 70% 50%);
+  --chart-4: hsl(200 70% 50%);
+  --chart-5: hsl(60 10% 70%);
+
+  /* Sidebar variables */
+  --sidebar: hsl(60 40% 15%);
+  --sidebar-foreground: hsl(60 5% 90%);
+  --sidebar-primary: hsl(60 85.7% 69.8%);
+  --sidebar-primary-foreground: hsl(0 0% 0%);
+  --sidebar-accent: hsl(22 30% 25%);
+  --sidebar-accent-foreground: hsl(60 5% 95%);
+  --sidebar-border: hsl(60 30% 45%);
+  --sidebar-ring: hsl(60 85.7% 69.8%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gradient-to-br from-primary to-background text-primary-foreground pt-4 min-h-[100dvh];
+    font-family: "Avenir Next", sans-serif;
+  }
+  h1,
+  h2 {
+    font-family: "Avenir Next Condensed" !important;
+  }
+}

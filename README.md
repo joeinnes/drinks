@@ -1,50 +1,87 @@
-# Jazz React starter with Tailwind and Demo Auth
+# Welcome to React Router!
 
-A minimal starter template for building apps with **[Jazz](https://jazz.tools)**, React, TailwindCSS, and Demo Auth.
+A modern, production-ready template for building full-stack React applications using React Router.
 
-## Creating an app
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
 
-Create a new Jazz app.
+## Features
+
+- 🚀 Server-side rendering
+- ⚡️ Hot Module Replacement (HMR)
+- 📦 Asset bundling and optimization
+- 🔄 Data loading and mutations
+- 🔒 TypeScript by default
+- 🎉 TailwindCSS for styling
+- 📖 [React Router docs](https://reactrouter.com/)
+
+## Getting Started
+
+### Installation
+
+Install the dependencies:
+
 ```bash
-npx create-jazz-app@latest
+npm install
 ```
 
-Then select "React + Jazz + Demo Auth + Tailwind".
+### Development
 
-## Running locally
-
-Install dependencies:
-
-```bash
-npm i
-# or
-yarn
-```
-
-Then, run the development server:
+Start the development server with HMR:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
+Your application will be available at `http://localhost:5173`.
 
-## Learning Jazz
+## Building for Production
 
-You can start by playing with the form, adding a new field in [./src/schema.ts](./src/schema.ts), 
-and seeing how easy it is to structure your data, and perform basic operations.
+Create a production build:
 
-To learn more, check out the [full tutorial](https://jazz.tools/docs/react/guide).
+```bash
+npm run build
+```
 
-## Questions / problems / feedback
+## Deployment
 
-If you have feedback, let us know on [Discord](https://discord.gg/utDMjHYg42) or open an issue or PR to fix something that seems wrong.
+### Docker Deployment
 
+To build and run using Docker:
 
-## Configuration: sync server
+```bash
+docker build -t my-app .
 
-By default, the app uses [Jazz Cloud](https://jazz.tools/cloud) (`wss://cloud.jazz.tools`) - so cross-device use, invites and collaboration should just work.
+# Run the container
+docker run -p 3000:3000 my-app
+```
 
-You can also run a local sync server by running `npx jazz-run sync` and adding the query param `?sync=ws://localhost:4200` to the URL of the example app (for example: `http://localhost:5173/?peer=ws://localhost:4200`), or by setting the `sync` parameter of the `<Jazz.Provider>` provider component in [./src/main.tsx](./src/main.tsx).
+The containerized application can be deployed to any platform that supports Docker, including:
+
+- AWS ECS
+- Google Cloud Run
+- Azure Container Apps
+- Digital Ocean App Platform
+- Fly.io
+- Railway
+
+### DIY Deployment
+
+If you're familiar with deploying Node applications, the built-in app server is production-ready.
+
+Make sure to deploy the output of `npm run build`
+
+```
+├── package.json
+├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
+├── build/
+│   ├── client/    # Static assets
+│   └── server/    # Server-side code
+```
+
+## Styling
+
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+
+---
+
+Built with ❤️ using React Router.
