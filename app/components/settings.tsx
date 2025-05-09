@@ -28,7 +28,7 @@ export function Settings() {
   const oldDrinks = window.localStorage.getItem("drinks");
   const drinks = oldDrinks ? JSON.parse(oldDrinks) : [];
   return (
-    <Drawer>
+    <Drawer repositionInputs={false}>
       <DrawerTrigger asChild>
         <Button variant="outline">
           <SettingsIcon className="mr-2" />
