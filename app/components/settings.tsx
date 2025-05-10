@@ -99,7 +99,9 @@ export function Settings() {
             <div className="grid grid-cols-2 gap-2">
               <Button
                 className="w-full"
-                onClick={() =>
+                onClick={() => {
+                  if (window.localStorage.getItem("drinksImported") === "true")
+                    alert("You have already imported your drinks");
                   drinks.forEach((drink: any) => {
                     const newDrink = Drink.create({
                       name: drink.name,
@@ -110,8 +112,9 @@ export function Settings() {
                       isDeleted: false,
                     });
                     me.root?.myDrinks?.push(newDrink);
-                  })
-                }
+                  });
+                  window.localStorage.setItem("drinksImported", "true");
+                }}
               >
                 Import old drinks
               </Button>
