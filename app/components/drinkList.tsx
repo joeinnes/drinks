@@ -73,7 +73,7 @@ export function DrinkList() {
                           <DialogHeader>
                             <DialogTitle>{drink.name}</DialogTitle>
                           </DialogHeader>
-                          <div>
+                          <div className="text-sm">
                             <strong>Date</strong>
                             <p className="opacity-70">
                               {dayjs(drink.date).format("DD MMM YYYY @ HH:mm")}
