@@ -34,15 +34,15 @@ Ever wondered how those drinks add up? **Drinks** is a modern, intuitive applica
 
 ### Installation
 
-1.  **Clone the repository (if applicable, otherwise skip for local setup):**
+1.  **Clone the repository:**
     ```bash
-    git clone <your-repository-url>
+    git clone [<your-repository-url>](https://github.com/joeinnes/drinks.git)
     cd drinks
     ```
 
 2.  **Install the dependencies:**
     ```bash
-    npm install
+    pnpm install
     ```
 
 ### Development
@@ -50,7 +50,7 @@ Ever wondered how those drinks add up? **Drinks** is a modern, intuitive applica
 Start the development server with Hot Module Replacement (HMR):
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Your application will be available at `http://localhost:5173` (or the port specified in your Vite config).
@@ -60,7 +60,7 @@ Your application will be available at `http://localhost:5173` (or the port speci
 Create a production-ready build:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 This will output the optimized static assets and server code into the `build/` directory.

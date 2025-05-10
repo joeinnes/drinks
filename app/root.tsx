@@ -12,6 +12,7 @@ import "./app.css";
 
 import { JazzProvider } from "jazz-react";
 import { DrinksAccount } from "./lib/schema";
+import { apiKey } from "./lib/utils";
 
 export const links: Route.LinksFunction = () => [];
 
@@ -27,7 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <JazzProvider
           sync={{
-            peer: "wss://cloud.jazz.tools/?key=you@example.com",
+            peer: `wss://cloud.jazz.tools/?key=${apiKey}`,
             when: "signedUp",
           }}
           AccountSchema={DrinksAccount}
