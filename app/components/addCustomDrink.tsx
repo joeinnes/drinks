@@ -64,7 +64,7 @@ export function AddCustomDrink({
           className="flex w-full"
         >
           <GlassWater className="size-4" />
-          Custom
+          <span className="flex-1">Custom</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -72,54 +72,66 @@ export function AddCustomDrink({
           <DrawerTitle>Add a custom drink</DrawerTitle>
           <DrawerDescription>Add details of your drink.</DrawerDescription>
         </DrawerHeader>
-        <div className="p-4">
-          <Label htmlFor="name">Drink Name</Label>
-          <Input
-            name="name"
-            id="name"
-            value={customName}
-            onChange={(e) => {
-              e.preventDefault();
-              setCustomName(e.target.value);
-            }}
-            required
-          />
-          <Label htmlFor="volume">Volume in ml</Label>
-          <Input
-            name="volume"
-            id="volume"
-            type="number"
-            value={customVolume}
-            onChange={(e) => {
-              e.preventDefault();
-              setCustomVolume(parseInt(e.target.value));
-            }}
-            required
-          />
-          <Label htmlFor="percent">Percentage</Label>
-          <Input
-            name="percent"
-            id="percent"
-            type="number"
-            value={customPercent}
-            onChange={(e) => {
-              e.preventDefault();
-              setCustomPercent(parseFloat(e.target.value));
-            }}
-            required
-          />
-          <Label htmlFor="time">Time</Label>
-          <Input
-            name="time"
-            id="time"
-            type="datetime-local"
-            value={dayjs().format("YYYY-MM-DDTHH:mm")}
-            onChange={(e) => {
-              e.preventDefault();
-              setCustomTime(new Date(e.target.value));
-            }}
-            required
-          />
+        <div className="px-4">
+          <div className="pb-2">
+            <Label htmlFor="name">Drink Name</Label>
+            <Input
+              name="name"
+              id="name"
+              className="w-full"
+              value={customName}
+              onChange={(e) => {
+                e.preventDefault();
+                setCustomName(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="pb-2">
+            <Label htmlFor="volume">Volume in ml</Label>
+            <Input
+              name="volume"
+              id="volume"
+              type="number"
+              className="w-full"
+              value={customVolume}
+              onChange={(e) => {
+                e.preventDefault();
+                setCustomVolume(parseInt(e.target.value));
+              }}
+              required
+            />
+          </div>
+          <div className="pb-2">
+            <Label htmlFor="percent">Percentage</Label>
+            <Input
+              name="percent"
+              id="percent"
+              type="number"
+              className="w-full"
+              value={customPercent}
+              onChange={(e) => {
+                e.preventDefault();
+                setCustomPercent(parseFloat(e.target.value));
+              }}
+              required
+            />
+          </div>
+          <div className="pb-2">
+            <Label htmlFor="time">Time</Label>
+            <Input
+              name="time"
+              id="time"
+              type="datetime-local"
+              className="w-full"
+              value={dayjs().format("YYYY-MM-DDTHH:mm")}
+              onChange={(e) => {
+                e.preventDefault();
+                setCustomTime(new Date(e.target.value));
+              }}
+              required
+            />
+          </div>
         </div>
         <div className="px-4">
           <DrawerTitle>After this drink</DrawerTitle>
