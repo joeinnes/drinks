@@ -67,7 +67,41 @@ export function DrinkList() {
                 return (
                   <TableRow key={i}>
                     <TableCell className="font-semibold">
-                      {drink.name}
+                      <Dialog>
+                        <DialogTrigger>{drink.name}</DialogTrigger>
+                        <DialogContent className="max-w-[90dvw]">
+                          <DialogHeader>
+                            <DialogTitle>{drink.name}</DialogTitle>
+                          </DialogHeader>
+                          <div>
+                            <strong>Date</strong>
+                            <p className="opacity-70">
+                              {dayjs(drink.date).format("DD MMM YYYY @ HH:mm")}
+                            </p>
+
+                            <strong>Volume</strong>
+                            <p className="opacity-70">
+                              {drink.volume}ml{" "}
+                              {drink.percent === 1 &&
+                                "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
+                            </p>
+                            <strong>Percent</strong>
+                            <p className="opacity-70">{drink.percent * 100}%</p>
+
+                            <strong>BAC Addition</strong>
+                            <p className="opacity-70">
+                              {drink.bacAddition.toFixed(4)}
+                            </p>
+                          </div>
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="outline" className="mb-2">
+                                Close
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {drink.bacAddition.toFixed(4)}
