@@ -45,7 +45,7 @@ export function AddCustomDrink({
     0
   );
   return (
-    <Drawer onOpenChange={() => setCustomTime(new Date())}>
+    <Drawer onOpenChange={() => setCustomTime(new Date())} repositionInputs={false}>
       <DrawerTrigger asChild>
         <Button
           variant={
