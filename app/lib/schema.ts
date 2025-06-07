@@ -15,7 +15,7 @@ export const DrinksRoot = co.map({
   hasAcceptedTerms: z.boolean(),
   myDrinks: co.list(Drink),
   myWeight: z.number(),
-  myGender: z.literal("male", "female"),
+  myGender: z.literal(["male", "female"]),
   myTarget: z.number(),
   myWeeklyTarget: z.number()
 });
