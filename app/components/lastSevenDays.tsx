@@ -1,4 +1,4 @@
-import type { Drink } from "~/lib/schema";
+import { DrinksAccount, type Drink } from "~/lib/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useAccount } from "jazz-react";
 import dayjs from "dayjs";
@@ -6,7 +6,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 export function LastSevenDays() {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount, {
+    resolve: {
+      root: {
+        myDrinks: true,
+      },
+    },
+  });
   const drinks = me?.root?.myDrinks || [];
   const filteredDrinks = drinks
     .filter(

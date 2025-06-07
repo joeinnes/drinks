@@ -1,14 +1,15 @@
-import type { Drink } from "~/lib/schema";
+import { DrinksAccount, type Drink } from "~/lib/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useAccount } from "jazz-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import type { co } from "jazz-tools";
 dayjs.extend(relativeTime);
 
 const WEEKLY_UNIT_TARGET = 14;
 
 export function AverageStats() {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount, { resolve: { root: { myDrinks: true } } });
   const drinks = me?.root?.myDrinks || [];
   const filteredDrinks = drinks
     .filter((el) => !!el && !el.isDeleted)
@@ -88,7 +89,7 @@ export function AverageStats() {
     let excessiveDaysCount = 0;
 
     // Group drinks by calendar day to count excessive days
-    const drinksByDay: { [key: string]: Drink[] } = {};
+    const drinksByDay: { [key: string]: co.loaded<typeof Drink>[] } = {};
     filteredDrinks.forEach((drink) => {
       if (!drink?.date) return; // Ensure drink and its date exist
       const dayKey = dayjs(drink.date).startOf("day").toISOString();

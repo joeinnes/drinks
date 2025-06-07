@@ -7,9 +7,16 @@ import { stateInWords } from "~/lib/utils/getStateInWords";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { DECAY_RATE } from "~/lib/utils";
+import { DrinksAccount } from "~/lib/schema";
 
 export function CurrentState({ currentBac }: { currentBac: number }) {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount, {
+    resolve: {
+      root: {
+        myDrinks: true,
+      },
+    },
+  });
   const sortedDrinks = [...(me?.root?.myDrinks || [])]
     .filter((el) => !!el && !el.isDeleted)
     .sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
