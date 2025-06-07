@@ -17,12 +17,11 @@ import { getBacAddition } from "@/lib/utils/getBacAddition";
 import { AddCustomDrink } from "@/components/addCustomDrink";
 
 import { Beer, Martini, Wine } from "lucide-react";
-import { Drink } from "@/lib/schema";
+import { Drink, DrinksAccount } from "@/lib/schema";
 import { DECAY_RATE } from "~/lib/utils";
-import dayjs from "dayjs";
 
 export function AddDrink({ currentBac }: { currentBac: number }) {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount);
   const bac = currentBac;
   const target = me.root?.myTarget || 0.05;
   const gender = me.root?.myGender || "male";
@@ -85,14 +84,14 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
                         bac > target
                           ? "destructive"
                           : getBacAddition(
-                              button.volume * button.percent,
-                              weight,
-                              gender
-                            ) +
-                              bac >
+                            button.volume * button.percent,
+                            weight,
+                            gender
+                          ) +
+                            bac >
                             target
-                          ? "secondary"
-                          : undefined
+                            ? "secondary"
+                            : undefined
                       }
                       onClick={() =>
                         addDrink(button.label, button.volume, button.percent)

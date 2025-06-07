@@ -20,11 +20,11 @@ import {
 import { useAccount } from "jazz-react";
 
 import { SettingsIcon } from "lucide-react";
-import { Drink } from "~/lib/schema";
+import { Drink, DrinksAccount } from "~/lib/schema";
 import { AuthModal } from "./authModal";
 
 export function Settings() {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount, { resolve: { root: { myDrinks: true } } });
   const oldDrinks = window.localStorage.getItem("drinks");
   const drinks = oldDrinks ? JSON.parse(oldDrinks) : [];
   return (

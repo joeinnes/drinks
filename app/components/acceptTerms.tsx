@@ -8,9 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DrinksAccount } from "~/lib/schema";
 
 export function AcceptTerms() {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount);
 
   return (
     <Card>

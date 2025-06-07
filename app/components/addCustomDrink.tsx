@@ -21,6 +21,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { DECAY_RATE } from "~/lib/utils";
+import { DrinksAccount } from "~/lib/schema";
 
 export function AddCustomDrink({
   addDrink,
@@ -29,7 +30,7 @@ export function AddCustomDrink({
   addDrink: (name: string, volume: number, percent: number, time: Date) => void;
   bac: number;
 }) {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount);
   const [customName, setCustomName] = useState("Spirit shot");
   const [customVolume, setCustomVolume] = useState(40);
   const [customPercent, setCustomPercent] = useState(37.5);
@@ -52,14 +53,14 @@ export function AddCustomDrink({
             bac > target
               ? "destructive"
               : getBacAddition(
-                  (customVolume * customPercent) / 100,
-                  weight,
-                  gender
-                ) +
-                  bac >
+                (customVolume * customPercent) / 100,
+                weight,
+                gender
+              ) +
+                bac >
                 target
-              ? "secondary"
-              : undefined
+                ? "secondary"
+                : undefined
           }
           className="flex w-full"
         >
