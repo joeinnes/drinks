@@ -31,7 +31,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             peer: `wss://cloud.jazz.tools/?key=${apiKey}`,
             when: "signedUp",
           }}
-          AccountSchema={DrinksAccount}
         >
           {children}
         </JazzProvider>
@@ -73,10 +72,4 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       )}
     </main>
   );
-}
-
-declare module "jazz-react" {
-  interface Register {
-    Account: DrinksAccount;
-  }
 }

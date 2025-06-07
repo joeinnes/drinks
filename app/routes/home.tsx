@@ -15,8 +15,9 @@ import { Settings as OriginalSettings } from "../components/settings";
 import { appName, appDescription } from "@/lib/utils";
 import { getCurrentBac } from "@/lib/utils/getCurrentBac";
 import { useEffect, useState, memo } from "react";
+import { DrinksAccount } from "~/lib/schema";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [{ title: appName }, { name: "description", content: appDescription }];
 }
 
@@ -30,7 +31,7 @@ const HelpfulLinks = memo(OriginalHelpfulLinks);
 const Disclaimer = memo(OriginalDisclaimer);
 
 export default function Home() {
-  const { me } = useAccount();
+  const { me } = useAccount(DrinksAccount);
 
   const [currentBac, setCurrentBac] = useState(0);
   useEffect(() => {
