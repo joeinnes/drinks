@@ -1,8 +1,8 @@
-import { Group } from "jazz-tools";
+import { co, Group } from "jazz-tools";
 import { DrinksAccount } from "../schema";
 
 export async function onAnonymousAccountDiscarded(
-  anonymousAccount: DrinksAccount
+  anonymousAccount: co.loaded<typeof DrinksAccount>
 ) {
   const { root: drinksRoot } = await anonymousAccount.ensureLoaded({
     resolve: {

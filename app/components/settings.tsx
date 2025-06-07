@@ -111,7 +111,7 @@ export function Settings() {
                       bacAddition: drink.bac,
                       isDeleted: false,
                     });
-                    me.root?.myDrinks?.push(newDrink);
+                    me?.root?.myDrinks?.push(newDrink);
                   });
                   window.localStorage.setItem("drinksImported", "true");
                 }}
