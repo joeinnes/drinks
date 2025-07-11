@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAccount } from "jazz-react";
+import { useAccount } from "jazz-tools/react";
 
 import dayjs from "dayjs";
 

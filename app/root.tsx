@@ -10,7 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 
-import { JazzProvider } from "jazz-react";
+import { JazzReactProvider } from "jazz-tools/react";
 import { DrinksAccount } from "./lib/schema";
 import { apiKey } from "./lib/utils";
 
@@ -26,14 +26,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <JazzProvider
+        <JazzReactProvider
           sync={{
             peer: `wss://cloud.jazz.tools/?key=${apiKey}`,
             when: "signedUp",
           }}
+          AccountSchema={DrinksAccount}
         >
           {children}
-        </JazzProvider>
+        </JazzReactProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
