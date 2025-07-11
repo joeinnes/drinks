@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useAccount } from "jazz-react";
+import { useAccount } from "jazz-tools/react";
 
 import { SettingsIcon } from "lucide-react";
 import { Drink, DrinksAccount } from "~/lib/schema";
