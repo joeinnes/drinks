@@ -38,9 +38,12 @@ export function DrinkList() {
       },
     }
   });
-  const sortedDrinks = [...(me?.root?.myDrinks || [])]
+  if (me?.root?.myDrinks[0].date.getTime() < me?.root?.myDrinks[1].date.getTime()) {
+    me?.root?.myDrinks.sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
+  }
+  
+  const sortedDrinks = me?.root?.myDrinks
     .filter((el) => !!el && !el.isDeleted)
-    .sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
   const [page, setPage] = useState(1);
   return (
     <Card>
