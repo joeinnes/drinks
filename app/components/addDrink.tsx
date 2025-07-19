@@ -41,7 +41,7 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
       isDeleted: false,
       bacAddition,
     });
-    me.root?.myDrinks?.push(newDrink);
+    me.root?.myDrinks?.unshift(newDrink);
   };
   const buttons = [
     { label: "Small Beer", volume: 330, percent: 0.045, icon: Beer },
