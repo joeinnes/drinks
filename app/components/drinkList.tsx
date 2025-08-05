@@ -34,7 +34,9 @@ export function DrinkList() {
   const { me } = useAccount(DrinksAccount, {
     resolve: {
       root: {
-        myDrinks: true,
+        myDrinks: {
+          $each: true,
+        },
       },
     },
   });
@@ -65,7 +67,7 @@ export function DrinkList() {
           </TableHeader>
           <TableBody>
             {drinks &&
-              drinks.slice(10 * page - 1, 10).map((drink, i) => {
+              drinks.slice(10 * (page - 1), 10).map((drink, i) => {
                 if (!drink) {
                   return null;
                 }
