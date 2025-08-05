@@ -20,7 +20,7 @@ import {
 import { useAccount } from "jazz-tools/react";
 
 import { SettingsIcon } from "lucide-react";
-import { Drink, DrinksAccount } from "~/lib/schema";
+import { Drink, DrinksAccount, ListOfDrinks } from "~/lib/schema";
 import { AuthModal } from "./authModal";
 
 export function Settings() {
@@ -128,6 +128,24 @@ export function Settings() {
                 className="w-full"
               >
                 Delete old drinks
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  const sortedDrinks = me?.root?.myDrinks
+                    ?.filter(Boolean)
+                    ?.sort((a, b) =>
+                      a && b ? b.date.getTime() - a.date.getTime() : 0,
+                    );
+                  console.log(sortedDrinks);
+                  if (me) {
+                    me.root.myDrinks = ListOfDrinks.create(
+                      sortedDrinks?.filter((el) => el !== null) || [],
+                    );
+                  }
+                }}
+              >
+                Sort Drinks
               </Button>
             </div>
           )}
