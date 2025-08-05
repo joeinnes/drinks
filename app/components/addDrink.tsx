@@ -23,14 +23,14 @@ import { DECAY_RATE } from "~/lib/utils";
 export function AddDrink({ currentBac }: { currentBac: number }) {
   const { me } = useAccount(DrinksAccount);
   const bac = currentBac;
-  const target = me.root?.myTarget || 0.05;
-  const gender = me.root?.myGender || "male";
-  const weight = me.root?.myWeight || 85000;
+  const target = me?.root?.myTarget || 0.05;
+  const gender = me?.root?.myGender || "male";
+  const weight = me?.root?.myWeight || 85000;
   const addDrink = (
     name: string,
     volume: number,
     percent: number,
-    time?: Date
+    time?: Date,
   ) => {
     const bacAddition = getBacAddition(volume * percent, weight, gender);
     const newDrink = Drink.create({
@@ -41,7 +41,7 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
       isDeleted: false,
       bacAddition,
     });
-    me.root?.myDrinks?.unshift(newDrink);
+    me?.root?.myDrinks?.unshift(newDrink);
   };
   const buttons = [
     { label: "Small Beer", volume: 330, percent: 0.045, icon: Beer },
@@ -73,7 +73,7 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
               const timeToZero = newBac / DECAY_RATE;
               const timeToTarget = Math.max(
                 (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
-                0
+                0,
               );
               return (
                 <TableRow key={i} className="border-0">
@@ -84,12 +84,12 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
                         bac > target
                           ? "destructive"
                           : getBacAddition(
-                            button.volume * button.percent,
-                            weight,
-                            gender
-                          ) +
-                            bac >
-                            target
+                                button.volume * button.percent,
+                                weight,
+                                gender,
+                              ) +
+                                bac >
+                              target
                             ? "secondary"
                             : undefined
                       }
@@ -110,7 +110,7 @@ export function AddDrink({ currentBac }: { currentBac: number }) {
                       <>
                         {Math.floor(timeToTarget)}h
                         {Math.round(
-                          (timeToTarget - Math.floor(timeToTarget)) * 60
+                          (timeToTarget - Math.floor(timeToTarget)) * 60,
                         )}
                         m
                       </>

@@ -2,7 +2,7 @@ import { co, Group } from "jazz-tools";
 import { DrinksAccount } from "../schema";
 
 export async function onAnonymousAccountDiscarded(
-  anonymousAccount: co.loaded<typeof DrinksAccount>
+  anonymousAccount: co.loaded<typeof DrinksAccount>,
 ) {
   const { root: drinksRoot } = await anonymousAccount.ensureLoaded({
     resolve: {
@@ -24,7 +24,7 @@ export async function onAnonymousAccountDiscarded(
     if (!drink || drink?.isDeleted) continue;
     const drinkGroup = drink._owner.castAs(Group);
     drinkGroup.addMember(me, "admin");
-    me.root.myDrinks.push(drink);
+    me.root.myDrinks.unshift(drink);
   }
 
   me.root.myGender = drinksRoot.myGender;

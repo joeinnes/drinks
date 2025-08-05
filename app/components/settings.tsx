@@ -24,7 +24,9 @@ import { Drink, DrinksAccount } from "~/lib/schema";
 import { AuthModal } from "./authModal";
 
 export function Settings() {
-  const { me } = useAccount(DrinksAccount, { resolve: { root: { myDrinks: true } } });
+  const { me } = useAccount(DrinksAccount, {
+    resolve: { root: { myDrinks: true } },
+  });
   const oldDrinks = window.localStorage.getItem("drinks");
   const drinks = oldDrinks ? JSON.parse(oldDrinks) : [];
   return (
@@ -111,7 +113,7 @@ export function Settings() {
                       bacAddition: drink.bac,
                       isDeleted: false,
                     });
-                    me?.root?.myDrinks?.push(newDrink);
+                    me?.root?.myDrinks?.unshift(newDrink);
                   });
                   window.localStorage.setItem("drinksImported", "true");
                 }}
