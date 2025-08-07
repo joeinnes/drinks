@@ -43,22 +43,25 @@ export function AddCustomDrink({
   const timeToZero = newBac / DECAY_RATE;
   const timeToTarget = Math.max(
     (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
-    0
+    0,
   );
   return (
-    <Drawer onOpenChange={() => setCustomTime(new Date())} repositionInputs={false}>
+    <Drawer
+      onOpenChange={() => setCustomTime(new Date())}
+      repositionInputs={false}
+    >
       <DrawerTrigger asChild>
         <Button
           variant={
             bac > target
               ? "destructive"
               : getBacAddition(
-                (customVolume * customPercent) / 100,
-                weight,
-                gender
-              ) +
-                bac >
-                target
+                    (customVolume * customPercent) / 100,
+                    weight,
+                    gender,
+                  ) +
+                    bac >
+                  target
                 ? "secondary"
                 : undefined
           }
@@ -140,7 +143,9 @@ export function AddCustomDrink({
         <div className="grid grid-cols-3 gap-2 text-center pt-2">
           <div>
             <h3 className="text-sm">BAC</h3>
-            <p className="font-black text-2xl">{newBac.toFixed(4)}</p>
+            <p className="font-black text-2xl">
+              {isNaN(newBac) ? "0" : newBac.toFixed(4)}
+            </p>
           </div>
           <div>
             <h3 className="text-sm">Time To Zero</h3>
@@ -200,7 +205,7 @@ export function AddCustomDrink({
                     customName,
                     customVolume,
                     customPercent / 100,
-                    customTime
+                    customTime,
                   );
                   setCustomName("Spirit shot");
                   setCustomVolume(40);
