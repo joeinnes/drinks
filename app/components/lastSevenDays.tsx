@@ -3,23 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useAccount } from "jazz-tools/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import type { co } from "jazz-tools";
 dayjs.extend(relativeTime);
 
-export function LastSevenDays() {
-  const { me } = useAccount(DrinksAccount, {
-    resolve: {
-      root: {
-        myDrinks: true,
-      },
-    },
-  });
-  const drinks = me?.root?.myDrinks || [];
+export function LastSevenDays({
+  drinks,
+}: {
+  drinks: co.loaded<typeof Drink>[];
+}) {
   const filteredDrinks = drinks
     .filter(
       (el) =>
         !!el &&
-        !el.isDeleted &&
-        dayjs(el.date).isAfter(dayjs().endOf("day").subtract(7, "days"))
+        dayjs(el.date).isAfter(dayjs().endOf("day").subtract(7, "days")),
     )
     .sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
 

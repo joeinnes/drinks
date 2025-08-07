@@ -7,25 +7,20 @@ import { stateInWords } from "~/lib/utils/getStateInWords";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { DECAY_RATE } from "~/lib/utils";
-import { DrinksAccount } from "~/lib/schema";
+import { Drink } from "~/lib/schema";
+import type { co } from "jazz-tools";
 
-export function CurrentState({ currentBac }: { currentBac: number }) {
-  const { me } = useAccount(DrinksAccount, {
-    resolve: {
-      root: {
-        myDrinks: true,
-      },
-    },
-  });
-  const sortedDrinks = [...(me?.root?.myDrinks || [])]
-    .filter((el) => !!el && !el.isDeleted)
-    .sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
-  const lastDrink = sortedDrinks[0];
+export function CurrentState({
+  currentBac,
+  lastDrink,
+  target = 0.05,
+}: {
+  currentBac: number;
+  lastDrink: co.loaded<typeof Drink> | undefined;
+  target?: number;
+}) {
   const timeToZero = currentBac / DECAY_RATE;
-  const timeToTarget = Math.max(
-    (currentBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
-    0
-  );
+  const timeToTarget = Math.max((currentBac - target) / DECAY_RATE, 0);
   return (
     <Card>
       <CardContent>

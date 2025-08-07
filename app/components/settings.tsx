@@ -17,18 +17,13 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useAccount } from "jazz-tools/react";
 
 import { SettingsIcon } from "lucide-react";
-import { Drink, DrinksAccount, ListOfDrinks } from "~/lib/schema";
+import { DrinksAccount, ListOfDrinks } from "~/lib/schema";
 import { AuthModal } from "./authModal";
+import type { co } from "jazz-tools";
 
-export function Settings() {
-  const { me } = useAccount(DrinksAccount, {
-    resolve: { root: { myDrinks: true } },
-  });
-  const oldDrinks = window.localStorage.getItem("drinks");
-  const drinks = oldDrinks ? JSON.parse(oldDrinks) : [];
+export function Settings({ me }: { me: co.loaded<typeof DrinksAccount> }) {
   return (
     <Drawer repositionInputs={false}>
       <DrawerTrigger asChild>
@@ -56,7 +51,7 @@ export function Settings() {
             />
           </div>
           <div>
-            <Label>Gender</Label>
+            <Label>Sex</Label>
             <Select
               value={me?.root?.myGender}
               onValueChange={(val: "male" | "female") => {
@@ -65,7 +60,7 @@ export function Settings() {
               }}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Gender" />
+                <SelectValue placeholder="Select Sex" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="male">Male</SelectItem>
@@ -97,61 +92,26 @@ export function Settings() {
               }}
             />
           </div>
-          {drinks && (
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                className="w-full"
-                onClick={() => {
-                  if (window.localStorage.getItem("drinksImported") === "true")
-                    alert("You have already imported your drinks");
-                  drinks.forEach((drink: any) => {
-                    const newDrink = Drink.create({
-                      name: drink.name,
-                      volume: drink.volume,
-                      percent: 1,
-                      date: new Date(drink.datetime),
-                      bacAddition: drink.bac,
-                      isDeleted: false,
-                    });
-                    me?.root?.myDrinks?.unshift(newDrink);
-                  });
-                  window.localStorage.setItem("drinksImported", "true");
-                }}
-              >
-                Import old drinks
-              </Button>
-              <Button
-                variant={"destructive"}
-                onClick={() => {
-                  window.localStorage.removeItem("drinks");
-                }}
-                className="w-full"
-              >
-                Delete old drinks
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  const sortedDrinks = me?.root?.myDrinks
-                    ?.filter(Boolean)
-                    ?.sort((a, b) =>
-                      a && b ? b.date.getTime() - a.date.getTime() : 0,
-                    );
-                  console.log(sortedDrinks);
-                  if (me) {
-                    me.root.myDrinks = ListOfDrinks.create(
-                      sortedDrinks?.filter((el) => el !== null) || [],
-                    );
-                  }
-                }}
-              >
-                Sort Drinks
-              </Button>
-            </div>
-          )}
+          <Button
+            variant="destructive"
+            onClick={() => {
+              const sortedDrinks = me?.root?.myDrinks
+                ?.filter(Boolean)
+                ?.sort((a, b) =>
+                  a && b ? b.date.getTime() - a.date.getTime() : 0,
+                );
+              console.log(sortedDrinks);
+              if (me && me.root) {
+                me.root.myDrinks = ListOfDrinks.create(
+                  sortedDrinks?.filter((el) => el !== null) || [],
+                );
+              }
+            }}
+          >
+            Sort Drinks
+          </Button>
         </div>
         <AuthModal />
-
         <DrawerFooter>
           <DrawerClose asChild>
             <Button>Save</Button>

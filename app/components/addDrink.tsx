@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -19,9 +18,24 @@ import { AddCustomDrink } from "@/components/addCustomDrink";
 import { Beer, Martini, Wine } from "lucide-react";
 import { Drink, DrinksAccount } from "@/lib/schema";
 import { DECAY_RATE } from "~/lib/utils";
+import type { co } from "jazz-tools";
 
-export function AddDrink({ currentBac }: { currentBac: number }) {
-  const { me } = useAccount(DrinksAccount);
+export function AddDrink({
+  currentBac,
+  me,
+}: {
+  currentBac: number;
+  me: co.loaded<
+    typeof DrinksAccount,
+    {
+      root: {
+        myDrinks: {
+          $each: true;
+        };
+      };
+    }
+  >;
+}) {
   const bac = currentBac;
   const target = me?.root?.myTarget || 0.05;
   const gender = me?.root?.myGender || "male";
