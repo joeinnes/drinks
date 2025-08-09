@@ -53,7 +53,10 @@ export const DrinksAccount = co
       console.log(
         "While migrating, the array was found to be ascending in order",
       );
-      root.myDrinks.reverse();
+      const reversedDrinks = [...root.myDrinks].reverse();
+      root.myDrinks = ListOfDrinks.create(
+        reversedDrinks.filter((el) => el !== null),
+      );
     }
 
     root.myWeight ??= 85000;
