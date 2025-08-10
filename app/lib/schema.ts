@@ -44,16 +44,6 @@ export const DrinksAccount = co
       root.myDrinks = ListOfDrinks.create([]);
     }
 
-    if (root.myDrinks && root.myDrinks.length > 1) {
-      console.log("Sorting");
-      const sortedDrinks = [...root.myDrinks].sort((a, b) =>
-        a && b ? a.date.getTime() - b.date.getTime() : 0,
-      );
-      root.myDrinks = ListOfDrinks.create(
-        sortedDrinks.filter((el) => el !== null),
-      );
-    }
-
     root.myWeight ??= 85000;
     root.myGender ??= "male";
     root.myTarget ??= 0.05;
