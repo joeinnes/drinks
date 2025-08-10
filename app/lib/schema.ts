@@ -44,18 +44,13 @@ export const DrinksAccount = co
       root.myDrinks = ListOfDrinks.create([]);
     }
 
-    if (
-      root.myDrinks &&
-      root.myDrinks.length > 1 &&
-      root.myDrinks[root.myDrinks.length - 2]?.date &&
-      root.myDrinks[root.myDrinks.length - 1]?.date
-    ) {
-      console.log(
-        "While migrating, the array was found to be ascending in order",
+    if (root.myDrinks && root.myDrinks.length > 1) {
+      console.log("Sorting");
+      const sortedDrinks = [...root.myDrinks].sort((a, b) =>
+        a && b ? a.date.getTime() - b.date.getTime() : 0,
       );
-      const reversedDrinks = [...root.myDrinks].reverse();
       root.myDrinks = ListOfDrinks.create(
-        reversedDrinks.filter((el) => el !== null),
+        sortedDrinks.filter((el) => el !== null),
       );
     }
 
