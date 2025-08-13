@@ -67,107 +67,113 @@ export function DrinkList() {
           </TableHeader>
           <TableBody>
             {drinks &&
-              drinks.map((drink, i) => {
-                if (!drink) {
-                  return null;
-                }
-                return (
-                  <TableRow key={i}>
-                    <TableCell className="font-semibold">
-                      <Dialog>
-                        <DialogTrigger>{drink.name}</DialogTrigger>
-                        <DialogContent className="max-w-[90dvw]">
-                          <DialogHeader>
-                            <DialogTitle>{drink.name}</DialogTitle>
-                          </DialogHeader>
-                          <div className="text-sm">
-                            <strong>Date</strong>
-                            <p className="opacity-70">
-                              {dayjs(drink.date).format("DD MMM YYYY @ HH:mm")}
-                            </p>
+              drinks
+                .slice(10 * (page - 1), 10 * (page - 1) + 10)
+                .map((drink, i) => {
+                  if (!drink) {
+                    return null;
+                  }
+                  return (
+                    <TableRow key={i}>
+                      <TableCell className="font-semibold">
+                        <Dialog>
+                          <DialogTrigger>{drink.name}</DialogTrigger>
+                          <DialogContent className="max-w-[90dvw]">
+                            <DialogHeader>
+                              <DialogTitle>{drink.name}</DialogTitle>
+                            </DialogHeader>
+                            <div className="text-sm">
+                              <strong>Date</strong>
+                              <p className="opacity-70">
+                                {dayjs(drink.date).format(
+                                  "DD MMM YYYY @ HH:mm",
+                                )}
+                              </p>
 
-                            <strong>Volume</strong>
-                            <p className="opacity-70">
-                              {drink.volume}ml{" "}
-                              {drink.percent === 1 &&
-                                "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
-                            </p>
-                            <strong>Percent</strong>
-                            <p className="opacity-70">{drink.percent * 100}%</p>
+                              <strong>Volume</strong>
+                              <p className="opacity-70">
+                                {drink.volume}ml{" "}
+                                {drink.percent === 1 &&
+                                  "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
+                              </p>
+                              <strong>Percent</strong>
+                              <p className="opacity-70">
+                                {drink.percent * 100}%
+                              </p>
 
-                            <strong>BAC Addition</strong>
-                            <p className="opacity-70">
-                              {drink.bacAddition.toFixed(4)}
-                            </p>
-                          </div>
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button variant="outline" className="mb-2">
-                                Close
-                              </Button>
-                            </DialogClose>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {drink.bacAddition.toFixed(4)}
-                    </TableCell>
-                    <TableCell>{drink.bacAddition.toFixed(4)}</TableCell>
-                    <TableCell className="text-center md:text-start flex flex-col">
-                      <p className="hidden md:inline">
-                        {dayjs(drink.date).fromNow()}
-                      </p>
-                      <p className="inline md:hidden">
-                        {dayjs(drink.date).format("HH:mm")}
-                      </p>
-                      <small>{dayjs(drink.date).format("DD MMM")}</small>
-                    </TableCell>
-                    <TableCell className="text-end">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="secondary" size="icon">
-                            <Delete />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-[90dvw]">
-                          <DialogHeader>
-                            <DialogTitle>Are you sure?</DialogTitle>
-                            <DialogDescription>
-                              You are about to delete the only copy of this
-                              data. There is no undo button, and no way to
-                              recover this data if you proceed.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button
-                                variant="destructive"
-                                onClick={(e) => {
-                                  const thisDrink = me?.root?.myDrinks?.find(
-                                    (drinkFromList) => {
-                                      return drink?.id === drinkFromList?.id;
-                                    },
-                                  );
-                                  if (!thisDrink) return;
-                                  thisDrink.isDeleted = true;
-                                }}
-                              >
-                                Yes, I'm sure
-                              </Button>
-                            </DialogClose>
-                            <DialogClose asChild>
-                              <Button variant="outline" className="mb-2">
-                                No, don't delete
-                              </Button>
-                            </DialogClose>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                              <strong>BAC Addition</strong>
+                              <p className="opacity-70">
+                                {drink.bacAddition.toFixed(4)}
+                              </p>
+                            </div>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button variant="outline" className="mb-2">
+                                  Close
+                                </Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {drink.bacAddition.toFixed(4)}
+                      </TableCell>
+                      <TableCell>{drink.bacAddition.toFixed(4)}</TableCell>
+                      <TableCell className="text-center md:text-start flex flex-col">
+                        <p className="hidden md:inline">
+                          {dayjs(drink.date).fromNow()}
+                        </p>
+                        <p className="inline md:hidden">
+                          {dayjs(drink.date).format("HH:mm")}
+                        </p>
+                        <small>{dayjs(drink.date).format("DD MMM")}</small>
+                      </TableCell>
+                      <TableCell className="text-end">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="secondary" size="icon">
+                              <Delete />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-[90dvw]">
+                            <DialogHeader>
+                              <DialogTitle>Are you sure?</DialogTitle>
+                              <DialogDescription>
+                                You are about to delete the only copy of this
+                                data. There is no undo button, and no way to
+                                recover this data if you proceed.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button
+                                  variant="destructive"
+                                  onClick={(e) => {
+                                    const thisDrink = me?.root?.myDrinks?.find(
+                                      (drinkFromList) => {
+                                        return drink?.id === drinkFromList?.id;
+                                      },
+                                    );
+                                    if (!thisDrink) return;
+                                    thisDrink.isDeleted = true;
+                                  }}
+                                >
+                                  Yes, I'm sure
+                                </Button>
+                              </DialogClose>
+                              <DialogClose asChild>
+                                <Button variant="outline" className="mb-2">
+                                  No, don't delete
+                                </Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
           </TableBody>
         </Table>
       </CardContent>
