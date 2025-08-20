@@ -1,36 +1,34 @@
-import { DrinksAccount, type Drink } from "~/lib/schema";
+import { Drink } from "~/lib/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useAccount } from "jazz-tools/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { co } from "jazz-tools";
+import { useMemo } from "react";
 dayjs.extend(relativeTime);
 
 const WEEKLY_UNIT_TARGET = 14;
 
-export function AverageStats() {
-  const { me } = useAccount(DrinksAccount, { resolve: { root: { myDrinks: true } } });
-  const drinks = me?.root?.myDrinks || [];
-  const filteredDrinks = drinks
-    .filter((el) => !!el && !el.isDeleted)
-    .sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
-
+export function AverageStats({
+  drinks,
+}: {
+  drinks: co.loaded<typeof Drink>[];
+}) {
   const calculateAverageDailyUnits = () => {
-    if (!filteredDrinks || filteredDrinks.length === 0) {
+    if (!drinks || drinks.length === 0) {
       return 0;
     }
 
     // The array is sorted descending by date, so the last element is the earliest.
-    const earliestDrink = filteredDrinks[filteredDrinks.length - 1];
+    const earliestDrink = drinks[drinks.length - 1];
     if (!earliestDrink?.date) return 0; // Guard against missing earliest drink or date
 
     const totalDays = Math.max(
       dayjs()
         .endOf("day")
         .diff(dayjs(earliestDrink.date).startOf("day"), "days") + 1,
-      1
+      1,
     );
-    const totalMlAlcohol = filteredDrinks.reduce((acc, curr) => {
+    const totalMlAlcohol = drinks.reduce((acc, curr) => {
       return acc + (curr?.volume || 0) * (curr?.percent || 0);
     }, 0);
     const totalUnits = totalMlAlcohol / 10;
@@ -38,17 +36,14 @@ export function AverageStats() {
     return parseFloat(average.toFixed(2));
   };
 
-  const averageDailyUnits = calculateAverageDailyUnits();
-  const averageWeeklyUnits = averageDailyUnits * 7;
-
   const calculateExcessiveWeeks = () => {
-    if (!filteredDrinks || filteredDrinks.length === 0) {
+    if (!drinks || drinks.length === 0) {
       return 0;
     }
     let excessiveWeeksCount = 0;
     // Ensure there's an earliest drink to start from
-    if (filteredDrinks.length === 0) return 0;
-    const earliestDrinkData = filteredDrinks[filteredDrinks.length - 1];
+    if (drinks.length === 0) return 0;
+    const earliestDrinkData = drinks[drinks.length - 1];
     if (!earliestDrinkData?.date) return 0; // Ensure date exists for the earliest drink
     const earliestDrinkDate = dayjs(earliestDrinkData.date);
 
@@ -58,7 +53,7 @@ export function AverageStats() {
     // up to periods that could include today's drinks.
     while (currentPeriodStart.isBefore(dayjs().startOf("day").add(1, "day"))) {
       const currentPeriodEnd = currentPeriodStart.add(7, "days");
-      const drinksInPeriod = filteredDrinks.filter((drink) => {
+      const drinksInPeriod = drinks.filter((drink) => {
         if (!drink?.date) return false;
         const drinkDate = dayjs(drink.date);
         // Include drinks on or after currentPeriodStart and strictly before currentPeriodEnd
@@ -82,7 +77,7 @@ export function AverageStats() {
   };
 
   const calculateExcessiveDays = () => {
-    if (!filteredDrinks || filteredDrinks.length === 0) {
+    if (!drinks || drinks.length === 0) {
       return 0;
     }
     const dailyTargetExcess = WEEKLY_UNIT_TARGET / 3;
@@ -90,7 +85,7 @@ export function AverageStats() {
 
     // Group drinks by calendar day to count excessive days
     const drinksByDay: { [key: string]: co.loaded<typeof Drink>[] } = {};
-    filteredDrinks.forEach((drink) => {
+    drinks.forEach((drink) => {
       if (!drink?.date) return; // Ensure drink and its date exist
       const dayKey = dayjs(drink.date).startOf("day").toISOString();
       if (!drinksByDay[dayKey]) {
@@ -111,8 +106,16 @@ export function AverageStats() {
     return excessiveDaysCount;
   };
 
-  const excessiveWeeks = calculateExcessiveWeeks();
-  const excessiveDays = calculateExcessiveDays();
+  const excessiveWeeks = useMemo(() => calculateExcessiveWeeks(), [drinks]);
+  const excessiveDays = useMemo(() => calculateExcessiveDays(), [drinks]);
+  const averageDailyUnits = useMemo(
+    () => calculateAverageDailyUnits(),
+    [drinks],
+  );
+  const averageWeeklyUnits = useMemo(
+    () => averageDailyUnits * 7,
+    [averageDailyUnits],
+  );
 
   return (
     <Card>

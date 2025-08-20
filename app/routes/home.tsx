@@ -17,7 +17,7 @@ import { getCurrentBac } from "@/lib/utils/getCurrentBac";
 import { useEffect, useState, memo } from "react";
 import { DrinksAccount } from "~/lib/schema";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [{ title: appName }, { name: "description", content: appDescription }];
 }
 
@@ -31,8 +31,17 @@ const HelpfulLinks = memo(OriginalHelpfulLinks);
 const Disclaimer = memo(OriginalDisclaimer);
 
 export default function Home() {
-  const { me } = useAccount(DrinksAccount);
+  const { me } = useAccount(DrinksAccount, {
+    resolve: {
+      root: {
+        myDrinks: {
+          $each: true,
+        },
+      },
+    },
+  });
 
+  const drinks = me?.root?.myDrinks.filter((el) => !!el && !el.isDeleted);
   const [currentBac, setCurrentBac] = useState(0);
   useEffect(() => {
     const updateCurrentBac = setInterval(() => {
@@ -48,12 +57,16 @@ export default function Home() {
 
       <main className="p-2 flex flex-col gap-2">
         {!me?.root?.hasAcceptedTerms && <AcceptTerms />}
-        <CurrentState currentBac={currentBac} />
-        <AddDrink currentBac={currentBac} />
-        <DrinkList />
-        <AverageStats />
-        <LastSevenDays />
-        <Settings />
+        <CurrentState
+          currentBac={currentBac}
+          lastDrink={drinks ? drinks[0] : undefined}
+          target={me?.root?.myTarget}
+        />
+        {me && <AddDrink currentBac={currentBac} me={me} />}
+        {drinks && <DrinkList drinks={drinks} />}
+        {drinks && <AverageStats drinks={drinks} />}
+        {drinks && <LastSevenDays drinks={drinks} />}
+        {me && <Settings me={me} />}
         <HelpfulLinks />
         <Disclaimer />
       </main>
