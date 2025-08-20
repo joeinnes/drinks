@@ -20,7 +20,7 @@ export const DrinkItem = React.memo(
   ({ drink }: { drink: co.loaded<typeof Drink> }) => {
     return (
       <TableRow key={drink.id}>
-        <TableCell className="font-semibold">
+        <TableCell className="truncate font-semibold">
           <Dialog>
             <DialogTrigger>{drink.name}</DialogTrigger>
             <DialogContent className="max-w-[90dvw]">
@@ -55,18 +55,20 @@ export const DrinkItem = React.memo(
             </DialogContent>
           </Dialog>
         </TableCell>
-        <TableCell className="hidden md:table-cell">
+        <TableCell className="hidden w-[120px] md:table-cell">
           {drink.bacAddition.toFixed(4)}
         </TableCell>
-        <TableCell>{drink.bacAddition.toFixed(4)}</TableCell>
-        <TableCell className="text-center md:text-start flex flex-col">
+        <TableCell className="w-[120px]">
+          {drink.bacAddition.toFixed(4)}
+        </TableCell>
+        <TableCell className="w-[150px] text-center md:text-start flex flex-col">
           <p className="hidden md:inline">{dayjs(drink.date).fromNow()}</p>
           <p className="inline md:hidden">
             {dayjs(drink.date).format("HH:mm")}
           </p>
           <small>{dayjs(drink.date).format("DD MMM")}</small>
         </TableCell>
-        <TableCell className="text-end">
+        <TableCell className="w-[80px] text-end">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="secondary" size="icon">

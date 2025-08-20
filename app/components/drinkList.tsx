@@ -30,15 +30,15 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
           <TableHeader>
             <TableRow>
               <TableHead>Drink</TableHead>
-              <TableHead className="hidden md:table-cell">
+              <TableHead className="hidden w-[120px] md:table-cell">
                 This Drink Added
               </TableHead>
-              <TableHead>
+              <TableHead className="w-[120px]">
                 BAC
                 <span className="hidden md:inline">&nbsp;After This Drink</span>
               </TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead className="text-center">Remove</TableHead>
+              <TableHead className="w-[150px]">Time</TableHead>
+              <TableHead className="w-[80px] text-center">Remove</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
