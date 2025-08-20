@@ -26,11 +26,11 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
         <CardTitle>Drink List</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
+        <Table className="table-fixed">
           <TableCaption>A list of your recent drinks.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Drink</TableHead>
+              <TableHead className="w-1/2">Drink</TableHead>
               <TableHead className="hidden w-[120px] md:table-cell">
                 This Drink Added
               </TableHead>
