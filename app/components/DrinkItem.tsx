@@ -40,7 +40,9 @@ export const DrinkItem = React.memo(
                     "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
                 </p>
                 <strong>Percent</strong>
-                <p className="opacity-70">{drink.percent * 100}%</p>
+                <p className="opacity-70">
+                  {Number((drink.percent * 100).toFixed(2))}%
+                </p>
 
                 <strong>BAC Addition</strong>
                 <p className="opacity-70">{drink.bacAddition.toFixed(4)}</p>
