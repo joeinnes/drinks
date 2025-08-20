@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -30,15 +31,15 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
           <TableHeader>
             <TableRow>
               <TableHead>Drink</TableHead>
-              <TableHead className="hidden md:table-cell">
+              <TableHead className="hidden w-[120px] md:table-cell">
                 This Drink Added
               </TableHead>
-              <TableHead>
+              <TableHead className="w-[120px]">
                 BAC
                 <span className="hidden md:inline">&nbsp;After This Drink</span>
               </TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead className="text-center">Remove</TableHead>
+              <TableHead className="w-[150px]">Time</TableHead>
+              <TableHead className="w-[80px] text-center">Remove</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -53,6 +54,27 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
                 })}
           </TableBody>
         </Table>
+        <div className="flex items-center justify-center space-x-4 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(page - 1)}
+            disabled={page <= 1}
+          >
+            Previous
+          </Button>
+          <div className="text-sm font-medium">
+            Page {page} of {Math.ceil(drinks.length / 10)}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(page + 1)}
+            disabled={page >= Math.ceil(drinks.length / 10)}
+          >
+            Next
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
