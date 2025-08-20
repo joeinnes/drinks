@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -53,6 +54,27 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
                 })}
           </TableBody>
         </Table>
+        <div className="flex items-center justify-center space-x-4 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(page - 1)}
+            disabled={page <= 1}
+          >
+            Previous
+          </Button>
+          <div className="text-sm font-medium">
+            Page {page} of {Math.ceil(drinks.length / 10)}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(page + 1)}
+            disabled={page >= Math.ceil(drinks.length / 10)}
+          >
+            Next
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
