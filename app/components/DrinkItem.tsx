@@ -20,45 +20,44 @@ export const DrinkItem = React.memo(
   ({ drink }: { drink: co.loaded<typeof Drink> }) => {
     return (
       <TableRow key={drink.id}>
-        <TableCell className="truncate font-semibold">
-          <Dialog>
-            <DialogTrigger>{drink.name}</DialogTrigger>
-            <DialogContent className="max-w-[90dvw]">
-              <DialogHeader>
-                <DialogTitle>{drink.name}</DialogTitle>
-              </DialogHeader>
-              <div className="text-sm">
-                <strong>Date</strong>
-                <p className="opacity-70">
-                  {dayjs(drink.date).format("DD MMM YYYY @ HH:mm")}
-                </p>
+        <TableCell className="w-1/2 font-semibold">
+          <div className="truncate">
+            <Dialog>
+              <DialogTrigger>{drink.name}</DialogTrigger>
+              <DialogContent className="max-w-[90dvw]">
+                <DialogHeader>
+                  <DialogTitle>{drink.name}</DialogTitle>
+                </DialogHeader>
+                <div className="text-sm">
+                  <strong>Date</strong>
+                  <p className="opacity-70">
+                    {dayjs(drink.date).format("DD MMM YYYY @ HH:mm")}
+                  </p>
 
-                <strong>Volume</strong>
-                <p className="opacity-70">
-                  {drink.volume}ml{" "}
-                  {drink.percent === 1 &&
-                    "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
-                </p>
-                <strong>Percent</strong>
-                <p className="opacity-70">
-                  {Number((drink.percent * 100).toFixed(2))}%
-                </p>
+                  <strong>Volume</strong>
+                  <p className="opacity-70">
+                    {drink.volume}ml{" "}
+                    {drink.percent === 1 &&
+                      "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
+                  </p>
+                  <strong>Percent</strong>
+                  <p className="opacity-70">
+                    {Number((drink.percent * 100).toFixed(2))}%
+                  </p>
 
-                <strong>BAC Addition</strong>
-                <p className="opacity-70">{drink.bacAddition.toFixed(4)}</p>
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline" className="mb-2">
-                    Close
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </TableCell>
-        <TableCell className="hidden w-[120px] md:table-cell">
-          {drink.bacAddition.toFixed(4)}
+                  <strong>BAC Addition</strong>
+                  <p className="opacity-70">{drink.bacAddition.toFixed(4)}</p>
+                </div>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline" className="mb-2">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </TableCell>
         <TableCell className="w-[120px]">
           {drink.bacAddition.toFixed(4)}
