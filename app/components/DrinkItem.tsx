@@ -1,6 +1,5 @@
 import type { co } from "jazz-tools";
 import type { Drink } from "~/lib/schema";
-import { TableRow, TableCell } from "@/components/ui/table";
 import {
   Dialog,
   DialogClose,
@@ -19,8 +18,10 @@ import React from "react";
 export const DrinkItem = React.memo(
   ({ drink }: { drink: co.loaded<typeof Drink> }) => {
     return (
-      <TableRow key={drink.id}>
-        <TableCell className="w-1/2 font-semibold">
+      // Root element is now a flex row div
+      <div className="flex items-center border-b p-2 text-sm">
+        {/* Drink Name Cell */}
+        <div className="flex-1 min-w-0 font-semibold">
           <div className="truncate">
             <Dialog>
               <DialogTrigger>{drink.name}</DialogTrigger>
@@ -33,7 +34,6 @@ export const DrinkItem = React.memo(
                   <p className="opacity-70">
                     {dayjs(drink.date).format("DD MMM YYYY @ HH:mm")}
                   </p>
-
                   <strong>Volume</strong>
                   <p className="opacity-70">
                     {drink.volume}ml{" "}
@@ -44,7 +44,6 @@ export const DrinkItem = React.memo(
                   <p className="opacity-70">
                     {Number((drink.percent * 100).toFixed(2))}%
                   </p>
-
                   <strong>BAC Addition</strong>
                   <p className="opacity-70">{drink.bacAddition.toFixed(4)}</p>
                 </div>
@@ -58,18 +57,22 @@ export const DrinkItem = React.memo(
               </DialogContent>
             </Dialog>
           </div>
-        </TableCell>
-        <TableCell className="w-[120px]">
-          {drink.bacAddition.toFixed(4)}
-        </TableCell>
-        <TableCell className="w-[150px] text-center md:text-start flex flex-col">
+        </div>
+
+        {/* BAC Added Cell */}
+        <div className="w-[120px]">{drink.bacAddition.toFixed(4)}</div>
+
+        {/* Time Cell */}
+        <div className="w-[150px] text-center md:text-start flex flex-col">
           <p className="hidden md:inline">{dayjs(drink.date).fromNow()}</p>
           <p className="inline md:hidden">
             {dayjs(drink.date).format("HH:mm")}
           </p>
           <small>{dayjs(drink.date).format("DD MMM")}</small>
-        </TableCell>
-        <TableCell className="w-[80px] text-end">
+        </div>
+
+        {/* Remove Cell */}
+        <div className="w-[80px] text-end">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="secondary" size="icon">
@@ -104,8 +107,8 @@ export const DrinkItem = React.memo(
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        </TableCell>
-      </TableRow>
+        </div>
+      </div>
     );
   },
 );
