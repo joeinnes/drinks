@@ -56,7 +56,7 @@ export default function Home() {
       <Header />
 
       <main className="p-2 flex flex-col gap-2">
-        {!me?.root?.hasAcceptedTerms && <AcceptTerms />}
+        {me && !me?.root?.hasAcceptedTerms && <AcceptTerms />}
         <CurrentState
           currentBac={currentBac}
           lastDrink={drinks ? drinks[0] : undefined}

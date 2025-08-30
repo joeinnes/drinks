@@ -20,9 +20,11 @@ export const DrinkItem = React.memo(
   ({ drink }: { drink: co.loaded<typeof Drink> }) => {
     return (
       <TableRow key={drink.id}>
-        <TableCell className="truncate font-semibold">
+        <TableCell className="truncate font-semibold max-w-32">
           <Dialog>
-            <DialogTrigger>{drink.name}</DialogTrigger>
+            <DialogTrigger className="overflow-hidden truncate w-full">
+              {drink.name}
+            </DialogTrigger>
             <DialogContent className="max-w-[90dvw]">
               <DialogHeader>
                 <DialogTitle>{drink.name}</DialogTitle>
@@ -40,7 +42,9 @@ export const DrinkItem = React.memo(
                     "(this drink was imported, and shows the quantity of pure alcohol, rather than the total volume of the drink)"}
                 </p>
                 <strong>Percent</strong>
-                <p className="opacity-70">{drink.percent * 100}%</p>
+                <p className="opacity-70">
+                  {Number((drink.percent * 100).toFixed(2))}%
+                </p>
 
                 <strong>BAC Addition</strong>
                 <p className="opacity-70">{drink.bacAddition.toFixed(4)}</p>
@@ -55,20 +59,18 @@ export const DrinkItem = React.memo(
             </DialogContent>
           </Dialog>
         </TableCell>
-        <TableCell className="hidden w-[120px] md:table-cell">
+        <TableCell className="hidden md:table-cell">
           {drink.bacAddition.toFixed(4)}
         </TableCell>
-        <TableCell className="w-[120px]">
-          {drink.bacAddition.toFixed(4)}
-        </TableCell>
-        <TableCell className="w-[150px] text-center md:text-start flex flex-col">
+        <TableCell className="">{drink.bacAddition.toFixed(4)}</TableCell>
+        <TableCell className=" text-center md:text-start flex flex-col">
           <p className="hidden md:inline">{dayjs(drink.date).fromNow()}</p>
           <p className="inline md:hidden">
             {dayjs(drink.date).format("HH:mm")}
           </p>
           <small>{dayjs(drink.date).format("DD MMM")}</small>
         </TableCell>
-        <TableCell className="w-[80px] text-end">
+        <TableCell className="text-end">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="secondary" size="icon">
