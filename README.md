@@ -20,8 +20,8 @@ Ever wondered how those drinks add up? **Drinks** is a modern, intuitive applica
 - **Personalized Settings:** Adjust weight and gender for more accurate BAC estimations.
 - **Target BAC Setting:** Define a personal BAC target and see how long until you reach it.
 - **Consumption Statistics:**
-    - Average daily and weekly units.
-    - Number of weeks/days exceeding recommended limits.
+  - Average daily and weekly units.
+  - Number of weeks/days exceeding recommended limits.
 - **Data Visualization:** Clear presentation of your current state and historical data (future enhancement).
 - **Modern Tech Stack:** Built with React, TypeScript, and TailwindCSS for a smooth and responsive experience.
 
@@ -35,6 +35,7 @@ Ever wondered how those drinks add up? **Drinks** is a modern, intuitive applica
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone [<your-repository-url>](https://github.com/joeinnes/drinks.git)
     cd drinks
@@ -67,7 +68,7 @@ This will output the optimized static assets and server code into the `build/` d
 
 ## ⚠️ Disclaimer
 
-**This application provides an *estimation* of Blood Alcohol Content (BAC) for informational and educational purposes only. It is NOT a substitute for official BAC testing devices (like a breathalyzer) and should NOT be used to determine if it is safe to drive or operate machinery.**
+**This application provides an _estimation_ of Blood Alcohol Content (BAC) for informational and educational purposes only. It is NOT a substitute for official BAC testing devices (like a breathalyzer) and should NOT be used to determine if it is safe to drive or operate machinery.**
 
 BAC can be affected by numerous factors including, but not limited to, individual metabolism, food intake, medication, health conditions, and hydration levels. The calculations used in this app are based on common formulas (e.g., Widmark formula) and may not perfectly reflect your actual BAC.
 

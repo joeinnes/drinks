@@ -1,22 +1,13 @@
-import { DrinksAccount, type Drink } from "~/lib/schema";
+import { type Drink } from "~/lib/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useAccount } from "jazz-tools/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { co } from "jazz-tools";
 dayjs.extend(relativeTime);
 
-export function LastSevenDays({
-  drinks,
-}: {
-  drinks: co.loaded<typeof Drink>[];
-}) {
+export function LastSevenDays({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
   const filteredDrinks = drinks
-    .filter(
-      (el) =>
-        !!el &&
-        dayjs(el.date).isAfter(dayjs().endOf("day").subtract(7, "days")),
-    )
+    .filter((el) => !!el && dayjs(el.date).isAfter(dayjs().endOf("day").subtract(7, "days")))
     .sort((a, b) => (a && b ? b.date.getTime() - a.date.getTime() : 0));
 
   let numberOfDrinks = filteredDrinks.length;

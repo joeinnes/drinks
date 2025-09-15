@@ -9,9 +9,9 @@ export function Disclaimer() {
         </CardHeader>
         <CardContent>
           <p>
-            Reminder: this app is not to be used to calculate BAC with accuracy,
-            and should not be relied on for any purpose. If you or others around
-            you have concerns about your drinking, seek professional help.
+            Reminder: this app is not to be used to calculate BAC with accuracy, and should not be
+            relied on for any purpose. If you or others around you have concerns about your
+            drinking, seek professional help.
           </p>
         </CardContent>
       </Card>

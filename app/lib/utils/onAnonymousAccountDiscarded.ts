@@ -1,10 +1,10 @@
-import { co, Group } from "jazz-tools";
+import { co } from "jazz-tools";
 import { DrinksAccount } from "../schema";
 
 export async function onAnonymousAccountDiscarded(
   anonymousAccount: co.loaded<typeof DrinksAccount>,
 ) {
-  const { root: drinksRoot } = await anonymousAccount.ensureLoaded({
+  const { root: drinksRoot } = await anonymousAccount.$jazz.ensureLoaded({
     resolve: {
       root: {
         myDrinks: true,
@@ -12,7 +12,7 @@ export async function onAnonymousAccountDiscarded(
     },
   });
 
-  const me = await DrinksAccount.getMe().ensureLoaded({
+  const me = await DrinksAccount.getMe().$jazz.ensureLoaded({
     resolve: {
       root: {
         myDrinks: true,
@@ -20,15 +20,16 @@ export async function onAnonymousAccountDiscarded(
     },
   });
 
+  // @ts-expect-error Nico's bug
   for (const drink of drinksRoot.myDrinks) {
     if (!drink || drink?.isDeleted) continue;
-    const drinkGroup = drink._owner.castAs(Group);
+    const drinkGroup = drink.$jazz.owner;
     drinkGroup.addMember(me, "admin");
-    me.root.myDrinks.unshift(drink);
+    me.root.myDrinks.$jazz.unshift(drink);
   }
 
-  me.root.myGender = drinksRoot.myGender;
-  me.root.myTarget = drinksRoot.myTarget;
-  me.root.myWeight = drinksRoot.myWeight;
-  me.root.myWeeklyTarget = drinksRoot.myWeeklyTarget;
+  me.root.$jazz.set("myGender", drinksRoot.myGender);
+  me.root.$jazz.set("myTarget", drinksRoot.myTarget);
+  me.root.$jazz.set("myWeight", drinksRoot.myWeight);
+  me.root.$jazz.set("myWeeklyTarget", drinksRoot.myWeeklyTarget);
 }

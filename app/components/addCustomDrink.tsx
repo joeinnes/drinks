@@ -30,38 +30,31 @@ export function AddCustomDrink({
   addDrink: (name: string, volume: number, percent: number, time: Date) => void;
   bac: number;
 }) {
-  const { me } = useAccount(DrinksAccount);
+  const me = useAccount(DrinksAccount, {
+    select: (me) => (me.$isLoaded ? me : me.$jazz.loadingState === "loading" ? undefined : null),
+    resolve: {
+      root: true
+    }
+  });
   const [customName, setCustomName] = useState("Spirit shot");
   const [customVolume, setCustomVolume] = useState(40);
   const [customPercent, setCustomPercent] = useState(37.5);
   const [customTime, setCustomTime] = useState(new Date());
-  const target = me?.root?.myTarget || 0.05;
-  const weight = me?.root?.myWeight || 80000;
-  const gender = me?.root?.myGender || "male";
-  const newBac =
-    bac + getBacAddition((customVolume * customPercent) / 100, weight, gender);
+  if (!me) return null;
+  const target = me.root.myTarget || 0.05;
+  const weight = me.root.myWeight || 80000;
+  const gender = me.root.myGender || "male";
+  const newBac = bac + getBacAddition((customVolume * customPercent) / 100, weight, gender);
   const timeToZero = newBac / DECAY_RATE;
-  const timeToTarget = Math.max(
-    (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
-    0,
-  );
+  const timeToTarget = Math.max((newBac - (me.root.myTarget || 0.05)) / DECAY_RATE, 0);
   return (
-    <Drawer
-      onOpenChange={() => setCustomTime(new Date())}
-      repositionInputs={false}
-    >
+    <Drawer onOpenChange={() => setCustomTime(new Date())} repositionInputs={false}>
       <DrawerTrigger asChild>
         <Button
           variant={
             bac > target
               ? "destructive"
-              : getBacAddition(
-                    (customVolume * customPercent) / 100,
-                    weight,
-                    gender,
-                  ) +
-                    bac >
-                  target
+              : getBacAddition((customVolume * customPercent) / 100, weight, gender) + bac > target
                 ? "secondary"
                 : undefined
           }
@@ -143,9 +136,7 @@ export function AddCustomDrink({
         <div className="grid grid-cols-3 gap-2 text-center pt-2">
           <div>
             <h3 className="text-sm">BAC</h3>
-            <p className="font-black text-2xl">
-              {isNaN(newBac) ? "0" : newBac.toFixed(4)}
-            </p>
+            <p className="font-black text-2xl">{isNaN(newBac) ? "0" : newBac.toFixed(4)}</p>
           </div>
           <div>
             <h3 className="text-sm">Time To Zero</h3>
@@ -154,16 +145,11 @@ export function AddCustomDrink({
                 "0h0m"
               ) : (
                 <>
-                  {Math.floor(timeToZero)}h
-                  {Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
+                  {Math.floor(timeToZero)}h{Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
                 </>
               )}
             </p>
-            <small>
-              {timeToZero
-                ? dayjs().add(timeToZero, "hours").format("h:mm a")
-                : ""}
-            </small>
+            <small>{timeToZero ? dayjs().add(timeToZero, "hours").format("h:mm a") : ""}</small>
           </div>
           <div>
             <h3 className="text-sm">Time To Target</h3>
@@ -177,11 +163,7 @@ export function AddCustomDrink({
                 </>
               )}
             </p>
-            <small>
-              {timeToTarget
-                ? dayjs().add(timeToTarget, "hours").format("h:mm a")
-                : ""}
-            </small>
+            <small>{timeToTarget ? dayjs().add(timeToTarget, "hours").format("h:mm a") : ""}</small>
           </div>
         </div>
         <DrawerFooter>
@@ -201,12 +183,7 @@ export function AddCustomDrink({
             <DrawerClose asChild>
               <Button
                 onClick={() => {
-                  addDrink(
-                    customName,
-                    customVolume,
-                    customPercent / 100,
-                    customTime,
-                  );
+                  addDrink(customName, customVolume, customPercent / 100, customTime);
                   setCustomName("Spirit shot");
                   setCustomVolume(40);
                   setCustomPercent(37.5);

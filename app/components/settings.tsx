@@ -23,7 +23,20 @@ import { DrinksAccount, ListOfDrinks } from "~/lib/schema";
 import { AuthModal } from "./authModal";
 import type { co } from "jazz-tools";
 
-export function Settings({ me }: { me: co.loaded<typeof DrinksAccount> }) {
+export function Settings({
+  me,
+}: {
+  me: co.loaded<
+    typeof DrinksAccount,
+    {
+      root: {
+        myDrinks: {
+          $each: true;
+        };
+      };
+    }
+  >;
+}) {
   return (
     <Drawer repositionInputs={false}>
       <DrawerTrigger asChild>
@@ -46,7 +59,7 @@ export function Settings({ me }: { me: co.loaded<typeof DrinksAccount> }) {
               onChange={(e) => {
                 e.preventDefault();
                 if (!me?.root) return;
-                me.root.myWeight = parseInt(e.target.value);
+                me.root.$jazz.set("myWeight", parseInt(e.target.value));
               }}
             />
           </div>
@@ -56,7 +69,7 @@ export function Settings({ me }: { me: co.loaded<typeof DrinksAccount> }) {
               value={me?.root?.myGender}
               onValueChange={(val: "male" | "female") => {
                 if (!me?.root) return;
-                me.root.myGender = val;
+                me.root.$jazz.set("myGender", val);
               }}
             >
               <SelectTrigger className="w-full">
@@ -76,7 +89,7 @@ export function Settings({ me }: { me: co.loaded<typeof DrinksAccount> }) {
               onChange={(e) => {
                 e.preventDefault();
                 if (!me?.root) return;
-                me.root.myTarget = parseFloat(e.target.value);
+                me.root.$jazz.set("myTarget", parseFloat(e.target.value));
               }}
             />
           </div>
@@ -84,28 +97,20 @@ export function Settings({ me }: { me: co.loaded<typeof DrinksAccount> }) {
             <Label>Weekly Unit Target</Label>
             <Input
               type="number"
-              value={me?.root?.myWeeklyTarget}
+              value={me.root.myWeeklyTarget}
               onChange={(e) => {
                 e.preventDefault();
-                if (!me?.root) return;
-                me.root.myWeeklyTarget = parseInt(e.target.value);
+                me.root.$jazz.set("myWeeklyTarget", parseInt(e.target.value));
               }}
             />
           </div>
           <Button
             variant="destructive"
             onClick={() => {
-              const sortedDrinks = me?.root?.myDrinks
-                ?.filter(Boolean)
-                ?.sort((a, b) =>
-                  a && b ? b.date.getTime() - a.date.getTime() : 0,
-                );
-              console.log(sortedDrinks);
-              if (me && me.root) {
-                me.root.myDrinks = ListOfDrinks.create(
-                  sortedDrinks?.filter((el) => el !== null) || [],
-                );
-              }
+              const sortedDrinks = [...me.root.myDrinks].sort(
+                (a, b) => b.date.getTime() - a.date.getTime(),
+              );
+              me.root.$jazz.set("myDrinks", ListOfDrinks.create(sortedDrinks));
             }}
           >
             Sort Drinks

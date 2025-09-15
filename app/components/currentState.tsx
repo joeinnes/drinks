@@ -1,4 +1,3 @@
-import { useAccount } from "jazz-tools/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -39,14 +38,9 @@ export function CurrentState({
           <div>
             <h3 className="text-sm">Time to Zero</h3>
             <p className="font-black text-2xl">
-              {Math.floor(timeToZero)}h
-              {Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
+              {Math.floor(timeToZero)}h{Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
             </p>
-            <small>
-              {timeToZero
-                ? dayjs().add(timeToZero, "hours").format("h:mm a")
-                : ""}
-            </small>
+            <small>{timeToZero ? dayjs().add(timeToZero, "hours").format("h:mm a") : ""}</small>
           </div>
           <div>
             <h3 className="text-sm">Time to Target</h3>
@@ -54,11 +48,7 @@ export function CurrentState({
               {Math.floor(timeToTarget)}h
               {Math.round((timeToTarget - Math.floor(timeToTarget)) * 60)}m
             </p>
-            <small>
-              {timeToTarget
-                ? dayjs().add(timeToTarget, "hours").format("h:mm a")
-                : ""}
-            </small>
+            <small>{timeToTarget ? dayjs().add(timeToTarget, "hours").format("h:mm a") : ""}</small>
           </div>
         </div>
       </CardContent>

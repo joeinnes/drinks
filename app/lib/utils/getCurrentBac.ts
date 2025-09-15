@@ -1,13 +1,20 @@
 import dayjs from "dayjs";
-import type { Drink, ListOfDrinks } from "../schema";
+import type { ListOfDrinks } from "../schema";
 import { DECAY_RATE } from "../utils";
 import { co } from "jazz-tools";
 
-export const getCurrentBac = (drinks: co.loaded<typeof ListOfDrinks> | null) => {
+export const getCurrentBac = (
+  drinks: co.loaded<
+    typeof ListOfDrinks,
+    {
+      $each: true;
+    }
+  > | null,
+) => {
   if (!drinks) return 0;
   const drinksArrSorted = [...drinks]
-    .sort((a, b) => (a && b ? a.date.getTime() - b.date.getTime() : 0))
-    .filter((el) => el !== null && !el.isDeleted) as co.loaded<typeof Drink>[]; // I can assert this because of the null check
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .filter((el) => !el.isDeleted);
   let currentBac = 0;
   if (drinksArrSorted.length === 0) {
     return 0;
@@ -20,15 +27,8 @@ export const getCurrentBac = (drinks: co.loaded<typeof ListOfDrinks> | null) => 
     timeOfLastDrink = date;
   }
   if (timeOfLastDrink) {
-    const hoursSinceLastDrinkToNow = dayjs().diff(
-      timeOfLastDrink,
-      "hour",
-      true
-    );
-    currentBac = Math.max(
-      currentBac - DECAY_RATE * hoursSinceLastDrinkToNow,
-      0
-    );
+    const hoursSinceLastDrinkToNow = dayjs().diff(timeOfLastDrink, "hour", true);
+    currentBac = Math.max(currentBac - DECAY_RATE * hoursSinceLastDrinkToNow, 0);
   }
   return currentBac;
 };

@@ -1,7 +1,5 @@
 import { useAccount } from "jazz-tools/react";
 
-import type { Route } from "./+types/home";
-
 import { Header as OriginalHeader } from "../components/header";
 import { AcceptTerms } from "../components/acceptTerms";
 import { AddDrink } from "../components/addDrink";
@@ -17,7 +15,7 @@ import { getCurrentBac } from "@/lib/utils/getCurrentBac";
 import { useEffect, useState, memo } from "react";
 import { DrinksAccount } from "~/lib/schema";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [{ title: appName }, { name: "description", content: appDescription }];
 }
 
@@ -31,7 +29,7 @@ const HelpfulLinks = memo(OriginalHelpfulLinks);
 const Disclaimer = memo(OriginalDisclaimer);
 
 export default function Home() {
-  const { me } = useAccount(DrinksAccount, {
+  const me = useAccount(DrinksAccount, {
     resolve: {
       root: {
         myDrinks: {
@@ -39,6 +37,7 @@ export default function Home() {
         },
       },
     },
+    select: (me) => (me.$isLoaded ? me : me.$jazz.loadingState === "loading" ? undefined : null),
   });
 
   const drinks = me?.root?.myDrinks.filter((el) => !!el && !el.isDeleted);

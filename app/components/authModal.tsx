@@ -1,14 +1,8 @@
-import { useAccount, usePasskeyAuth } from "jazz-tools/react";
+import { useAccount, usePasskeyAuth, useLogOut } from "jazz-tools/react";
 import { useState } from "react";
 import { appName } from "~/lib/utils";
 import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
@@ -21,16 +15,11 @@ export function AuthModal() {
     // Must be inside the JazzProvider!
     appName,
   });
-  const { logOut } = useAccount();
-
+  const logOut = useLogOut();
   if (auth.state === "signedIn") {
     return (
       <div className="px-4 w-full">
-        <Button
-          onClick={() => logOut()}
-          variant="destructive"
-          className="w-full"
-        >
+        <Button onClick={() => logOut()} variant="destructive" className="w-full">
           Log Out
         </Button>
       </div>
@@ -60,11 +49,7 @@ export function AuthModal() {
         {isNew ? (
           <>
             <Label>Name</Label>
-            <Input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
             <Button onClick={handleSignUp}>Sign up</Button>
             <Button onClick={() => setIsNew(false)} variant="ghost">
               I already have an account
@@ -79,8 +64,8 @@ export function AuthModal() {
           </>
         )}
         <small>
-          You don't have to sign in to use this app, but signing in will allow
-          you to sync your drinks and settings across devices.
+          You don't have to sign in to use this app, but signing in will allow you to sync your
+          drinks and settings across devices.
         </small>
       </DialogContent>
     </Dialog>

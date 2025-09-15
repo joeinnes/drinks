@@ -31,9 +31,7 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
           <TableHeader>
             <TableRow>
               <TableHead>Drink</TableHead>
-              <TableHead className="hidden md:table-cell">
-                This Drink Added
-              </TableHead>
+              <TableHead className="hidden md:table-cell">This Drink Added</TableHead>
               <TableHead className="">
                 BAC
                 <span className="hidden md:inline">&nbsp;After This Drink</span>
@@ -44,14 +42,12 @@ export function DrinkList({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
           </TableHeader>
           <TableBody>
             {drinks &&
-              drinks
-                .slice(10 * (page - 1), 10 * (page - 1) + 10)
-                .map((drink) => {
-                  if (!drink) {
-                    return null;
-                  }
-                  return <DrinkItem drink={drink} />;
-                })}
+              drinks.slice(10 * (page - 1), 10 * (page - 1) + 10).map((drink) => {
+                if (!drink) {
+                  return null;
+                }
+                return <DrinkItem drink={drink} />;
+              })}
           </TableBody>
         </Table>
         <div className="flex items-center justify-center space-x-4 py-4">

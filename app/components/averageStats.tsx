@@ -8,11 +8,7 @@ dayjs.extend(relativeTime);
 
 const WEEKLY_UNIT_TARGET = 14;
 
-export function AverageStats({
-  drinks,
-}: {
-  drinks: co.loaded<typeof Drink>[];
-}) {
+export function AverageStats({ drinks }: { drinks: co.loaded<typeof Drink>[] }) {
   const calculateAverageDailyUnits = () => {
     if (!drinks || drinks.length === 0) {
       return 0;
@@ -23,9 +19,7 @@ export function AverageStats({
     if (!earliestDrink?.date) return 0; // Guard against missing earliest drink or date
 
     const totalDays = Math.max(
-      dayjs()
-        .endOf("day")
-        .diff(dayjs(earliestDrink.date).startOf("day"), "days") + 1,
+      dayjs().endOf("day").diff(dayjs(earliestDrink.date).startOf("day"), "days") + 1,
       1,
     );
     const totalMlAlcohol = drinks.reduce((acc, curr) => {
@@ -57,10 +51,7 @@ export function AverageStats({
         if (!drink?.date) return false;
         const drinkDate = dayjs(drink.date);
         // Include drinks on or after currentPeriodStart and strictly before currentPeriodEnd
-        return (
-          !drinkDate.isBefore(currentPeriodStart) &&
-          drinkDate.isBefore(currentPeriodEnd)
-        );
+        return !drinkDate.isBefore(currentPeriodStart) && drinkDate.isBefore(currentPeriodEnd);
       });
 
       const unitsInPeriod = drinksInPeriod.reduce((acc, curr) => {
@@ -108,14 +99,8 @@ export function AverageStats({
 
   const excessiveWeeks = useMemo(() => calculateExcessiveWeeks(), [drinks]);
   const excessiveDays = useMemo(() => calculateExcessiveDays(), [drinks]);
-  const averageDailyUnits = useMemo(
-    () => calculateAverageDailyUnits(),
-    [drinks],
-  );
-  const averageWeeklyUnits = useMemo(
-    () => averageDailyUnits * 7,
-    [averageDailyUnits],
-  );
+  const averageDailyUnits = useMemo(() => calculateAverageDailyUnits(), [drinks]);
+  const averageWeeklyUnits = useMemo(() => averageDailyUnits * 7, [averageDailyUnits]);
 
   return (
     <Card>
@@ -126,16 +111,12 @@ export function AverageStats({
         <div className="grid grid-cols-4 gap-2 text-center pt-2">
           <div className="flex flex-col justify-between">
             <h3 className="text-xs">Average Daily Units</h3>
-            <p className="font-black text-2xl">
-              {averageDailyUnits.toFixed(2)}
-            </p>
+            <p className="font-black text-2xl">{averageDailyUnits.toFixed(2)}</p>
           </div>
 
           <div className="flex flex-col justify-between">
             <h3 className="text-xs">Average Weekly Units</h3>
-            <p className="font-black text-2xl">
-              {averageWeeklyUnits.toFixed(2)}
-            </p>
+            <p className="font-black text-2xl">{averageWeeklyUnits.toFixed(2)}</p>
           </div>
 
           <div className="flex flex-col justify-between">

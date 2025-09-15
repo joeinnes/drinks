@@ -1,5 +1,3 @@
-import { useAccount } from "jazz-tools/react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -40,12 +38,7 @@ export function AddDrink({
   const target = me?.root?.myTarget || 0.05;
   const gender = me?.root?.myGender || "male";
   const weight = me?.root?.myWeight || 85000;
-  const addDrink = (
-    name: string,
-    volume: number,
-    percent: number,
-    time?: Date,
-  ) => {
+  const addDrink = (name: string, volume: number, percent: number, time?: Date) => {
     const bacAddition = getBacAddition(volume * percent, weight, gender);
     const newDrink = Drink.create({
       name,
@@ -55,7 +48,7 @@ export function AddDrink({
       isDeleted: false,
       bacAddition,
     });
-    me?.root?.myDrinks?.unshift(newDrink);
+    me?.root?.myDrinks?.$jazz.unshift(newDrink);
   };
   const buttons = [
     { label: "Small Beer", volume: 330, percent: 0.045, icon: Beer },
@@ -81,9 +74,7 @@ export function AddDrink({
           </TableHeader>
           <TableBody>
             {buttons.map((button, i) => {
-              const newBac =
-                bac +
-                getBacAddition(button.volume * button.percent, weight, gender);
+              const newBac = bac + getBacAddition(button.volume * button.percent, weight, gender);
               const timeToZero = newBac / DECAY_RATE;
               const timeToTarget = Math.max(
                 (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
@@ -97,19 +88,12 @@ export function AddDrink({
                       variant={
                         bac > target
                           ? "destructive"
-                          : getBacAddition(
-                                button.volume * button.percent,
-                                weight,
-                                gender,
-                              ) +
-                                bac >
+                          : getBacAddition(button.volume * button.percent, weight, gender) + bac >
                               target
                             ? "secondary"
                             : undefined
                       }
-                      onClick={() =>
-                        addDrink(button.label, button.volume, button.percent)
-                      }
+                      onClick={() => addDrink(button.label, button.volume, button.percent)}
                       className="flex w-full"
                     >
                       <button.icon className="size-4" />
@@ -123,10 +107,7 @@ export function AddDrink({
                     ) : (
                       <>
                         {Math.floor(timeToTarget)}h
-                        {Math.round(
-                          (timeToTarget - Math.floor(timeToTarget)) * 60,
-                        )}
-                        m
+                        {Math.round((timeToTarget - Math.floor(timeToTarget)) * 60)}m
                       </>
                     )}
                   </TableCell>
@@ -136,8 +117,7 @@ export function AddDrink({
                     ) : (
                       <>
                         {Math.floor(timeToZero)}h
-                        {Math.round((timeToZero - Math.floor(timeToZero)) * 60)}
-                        m
+                        {Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
                       </>
                     )}
                   </TableCell>
