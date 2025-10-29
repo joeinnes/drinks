@@ -40,26 +40,26 @@ export default function Home() {
     select: (me) => (me.$isLoaded ? me : me.$jazz.loadingState === "loading" ? undefined : null),
   });
 
-  const drinks = me?.root?.myDrinks.filter((el) => !!el && !el.isDeleted);
+  const drinks = me?.$isLoaded ? me.root.myDrinks.filter((el) => !!el && !el.isDeleted) : undefined;
   const [currentBac, setCurrentBac] = useState(0);
   useEffect(() => {
+    const myDrinks = me?.$isLoaded ? me.root.myDrinks : null;
     const updateCurrentBac = setInterval(() => {
-      const newBac = getCurrentBac(me?.root?.myDrinks || null);
-
+      const newBac = getCurrentBac(myDrinks);
       setCurrentBac(newBac);
     }, 1000);
     return () => clearInterval(updateCurrentBac);
-  });
+  }, [me?.$isLoaded && me.root.myDrinks]);
   return (
     <>
       <Header />
 
       <main className="p-2 flex flex-col gap-2">
-        {me && !me?.root?.hasAcceptedTerms && <AcceptTerms />}
+        {me?.$isLoaded && !me.root.hasAcceptedTerms && <AcceptTerms />}
         <CurrentState
           currentBac={currentBac}
           lastDrink={drinks ? drinks[0] : undefined}
-          target={me?.root?.myTarget}
+          target={me?.$isLoaded ? me.root.myTarget : undefined}
         />
         {me && <AddDrink currentBac={currentBac} me={me} />}
         {drinks && <DrinkList drinks={drinks} />}

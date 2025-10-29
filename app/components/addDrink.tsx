@@ -35,9 +35,9 @@ export function AddDrink({
   >;
 }) {
   const bac = currentBac;
-  const target = me?.root?.myTarget || 0.05;
-  const gender = me?.root?.myGender || "male";
-  const weight = me?.root?.myWeight || 85000;
+  const target = me.root.myTarget;
+  const gender = me.root.myGender;
+  const weight = me.root.myWeight;
   const addDrink = (name: string, volume: number, percent: number, time?: Date) => {
     const bacAddition = getBacAddition(volume * percent, weight, gender);
     const newDrink = Drink.create({
@@ -48,7 +48,7 @@ export function AddDrink({
       isDeleted: false,
       bacAddition,
     });
-    me?.root?.myDrinks?.$jazz.unshift(newDrink);
+    me.root.myDrinks.$jazz.unshift(newDrink);
   };
   const buttons = [
     { label: "Small Beer", volume: 330, percent: 0.045, icon: Beer },
@@ -77,7 +77,7 @@ export function AddDrink({
               const newBac = bac + getBacAddition(button.volume * button.percent, weight, gender);
               const timeToZero = newBac / DECAY_RATE;
               const timeToTarget = Math.max(
-                (newBac - (me?.root?.myTarget || 0.05)) / DECAY_RATE,
+                (newBac - me.root.myTarget) / DECAY_RATE,
                 0,
               );
               return (

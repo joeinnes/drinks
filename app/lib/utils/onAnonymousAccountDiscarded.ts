@@ -20,9 +20,10 @@ export async function onAnonymousAccountDiscarded(
     },
   });
 
-  // @ts-expect-error Nico's bug
-  for (const drink of drinksRoot.myDrinks) {
-    if (!drink || drink?.isDeleted) continue;
+  for (let i = 0; i < drinksRoot.myDrinks.length; i++) {
+    const drink = drinksRoot.myDrinks[i];
+    if (!drink || !drink.$isLoaded) continue;
+    if (drink.isDeleted) continue;
     const drinkGroup = drink.$jazz.owner;
     drinkGroup.addMember(me, "admin");
     me.root.myDrinks.$jazz.unshift(drink);

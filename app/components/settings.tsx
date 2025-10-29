@@ -55,10 +55,9 @@ export function Settings({
             <Label>Weight</Label>
             <Input
               type="number"
-              value={me?.root?.myWeight}
+              value={me.root.myWeight}
               onChange={(e) => {
                 e.preventDefault();
-                if (!me?.root) return;
                 me.root.$jazz.set("myWeight", parseInt(e.target.value));
               }}
             />
@@ -66,9 +65,8 @@ export function Settings({
           <div>
             <Label>Sex</Label>
             <Select
-              value={me?.root?.myGender}
+              value={me.root.myGender}
               onValueChange={(val: "male" | "female") => {
-                if (!me?.root) return;
                 me.root.$jazz.set("myGender", val);
               }}
             >
@@ -85,10 +83,9 @@ export function Settings({
             <Label>Target</Label>
             <Input
               type="number"
-              value={me?.root?.myTarget}
+              value={me.root.myTarget}
               onChange={(e) => {
                 e.preventDefault();
-                if (!me?.root) return;
                 me.root.$jazz.set("myTarget", parseFloat(e.target.value));
               }}
             />
