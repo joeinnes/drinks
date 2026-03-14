@@ -50,19 +50,24 @@ export function AddCustomDrink({
   return (
     <Drawer onOpenChange={() => setCustomTime(new Date())} repositionInputs={false}>
       <DrawerTrigger asChild>
-        <Button
-          variant={
+        <button
+          className={[
+            "drink-card",
             bac > target
-              ? "destructive"
+              ? "danger"
               : getBacAddition((customVolume * customPercent) / 100, weight, gender) + bac > target
-                ? "secondary"
-                : undefined
-          }
-          className="flex w-full"
+                ? "warning"
+                : "",
+          ].join(" ")}
         >
-          <GlassWater className="size-4" />
-          <span className="flex-1">Custom</span>
-        </Button>
+          <GlassWater
+            className={`size-5 ${bac > target ? "text-destructive" : "text-primary"}`}
+          />
+          <span className="font-display text-sm font-semibold text-foreground leading-tight">
+            Custom
+          </span>
+          <span className="font-nums text-xs text-muted-foreground">+ add</span>
+        </button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
@@ -133,37 +138,24 @@ export function AddCustomDrink({
         <div className="px-4">
           <DrawerTitle>After this drink</DrawerTitle>
         </div>
-        <div className="grid grid-cols-3 gap-2 text-center pt-2">
-          <div>
-            <h3 className="text-sm">BAC</h3>
-            <p className="font-black text-2xl">{isNaN(newBac) ? "0" : newBac.toFixed(4)}</p>
+        <div className="grid grid-cols-3 divide-x divide-border border-t border-border mt-2">
+          <div className="stat-block">
+            <span className="stat-label">BAC</span>
+            <p className="stat-value text-primary bac-glow">{isNaN(newBac) ? "0.0000" : newBac.toFixed(4)}</p>
           </div>
-          <div>
-            <h3 className="text-sm">Time To Zero</h3>
-            <p className="font-black text-2xl">
-              {isNaN(timeToZero) ? (
-                "0h0m"
-              ) : (
-                <>
-                  {Math.floor(timeToZero)}h{Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
-                </>
-              )}
+          <div className="stat-block">
+            <span className="stat-label">To zero</span>
+            <p className="stat-value">
+              {isNaN(timeToZero) ? "0h0m" : `${Math.floor(timeToZero)}h${Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m`}
             </p>
-            <small>{timeToZero ? dayjs().add(timeToZero, "hours").format("h:mm a") : ""}</small>
+            <span className="stat-sub">{timeToZero ? dayjs().add(timeToZero, "hours").format("h:mm a") : ""}</span>
           </div>
-          <div>
-            <h3 className="text-sm">Time To Target</h3>
-            <p className="font-black text-2xl">
-              {isNaN(timeToTarget) ? (
-                "0h0m"
-              ) : (
-                <>
-                  {Math.floor(timeToTarget)}h
-                  {Math.round((timeToTarget - Math.floor(timeToTarget)) * 60)}m
-                </>
-              )}
+          <div className="stat-block">
+            <span className="stat-label">To target</span>
+            <p className="stat-value">
+              {isNaN(timeToTarget) ? "0h0m" : `${Math.floor(timeToTarget)}h${Math.round((timeToTarget - Math.floor(timeToTarget)) * 60)}m`}
             </p>
-            <small>{timeToTarget ? dayjs().add(timeToTarget, "hours").format("h:mm a") : ""}</small>
+            <span className="stat-sub">{timeToTarget ? dayjs().add(timeToTarget, "hours").format("h:mm a") : ""}</span>
           </div>
         </div>
         <DrawerFooter>

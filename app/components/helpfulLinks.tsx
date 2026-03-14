@@ -1,38 +1,44 @@
-import { CarTaxiFront } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CarTaxiFront, HeartHandshake } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function HelpfulLinks() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Helpful Links</CardTitle>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl">Helpful Links</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex flex-col gap-2">
-          <p>Don't drink and drive. Call a taxi.</p>
+      <CardContent className="flex flex-col gap-3">
+        <a
+          href="https://www.google.com/search?q=taxis+near+me"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-3 p-3 rounded border border-border bg-muted hover:border-primary/40 hover:bg-accent transition-colors group"
+        >
+          <CarTaxiFront className="size-4 text-muted-foreground group-hover:text-primary shrink-0 transition-colors" />
+          <div>
+            <p className="font-display text-sm font-semibold text-foreground">Find a Taxi</p>
+            <p className="font-nums text-[0.65rem] text-muted-foreground">
+              Don't drink and drive. Call a taxi.
+            </p>
+          </div>
+        </a>
 
-          <Button asChild>
-            <a href="https://www.google.com/search?q=taxis+near+me" target="_blank">
-              <CarTaxiFront className="mr-2" />
-              Taxi Companies
-            </a>
-          </Button>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <p>Worried about your alcohol use?</p>
-          <Button asChild>
-            <a href="https://www.smartrecoveryinternational.org/" target="_blank">
+        <a
+          href="https://www.smartrecoveryinternational.org/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-3 p-3 rounded border border-border bg-muted hover:border-primary/40 hover:bg-accent transition-colors group"
+        >
+          <HeartHandshake className="size-4 text-muted-foreground group-hover:text-primary shrink-0 transition-colors" />
+          <div>
+            <p className="font-display text-sm font-semibold text-foreground">
               Smart Recovery International
-            </a>
-          </Button>
-          <Button asChild>
-            <a href="https://www.google.com/search?q=help+with+alcohol+addiction" target="_blank">
-              Help with alcohol addiction
-            </a>
-          </Button>
-        </div>
+            </p>
+            <p className="font-nums text-[0.65rem] text-muted-foreground">
+              Worried about your alcohol use?
+            </p>
+          </div>
+        </a>
       </CardContent>
     </Card>
   );

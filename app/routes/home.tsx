@@ -50,11 +50,12 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(updateCurrentBac);
   }, [me?.$isLoaded && me.root.myDrinks]);
+
   return (
     <>
       <Header />
 
-      <main className="p-2 flex flex-col gap-2">
+      <main className="px-2 pb-6 flex flex-col gap-2 max-w-lg mx-auto w-full">
         {me?.$isLoaded && !me.root.hasAcceptedTerms && <AcceptTerms />}
         <CurrentState
           currentBac={currentBac}
@@ -63,8 +64,8 @@ export default function Home() {
         />
         {me && <AddDrink currentBac={currentBac} me={me} />}
         {drinks && <DrinkList drinks={drinks} />}
-        {drinks && <AverageStats drinks={drinks} />}
         {drinks && <LastSevenDays drinks={drinks} />}
+        {drinks && <AverageStats drinks={drinks} />}
         {me && <Settings me={me} />}
         <HelpfulLinks />
         <Disclaimer />

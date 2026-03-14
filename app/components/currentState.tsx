@@ -20,35 +20,45 @@ export function CurrentState({
 }) {
   const timeToZero = currentBac / DECAY_RATE;
   const timeToTarget = Math.max((currentBac - target) / DECAY_RATE, 0);
-  return (
-    <Card>
-      <CardContent>
-        {lastDrink ? (
-          <p>Your last drink was {dayjs().to(lastDrink.date)}.</p>
-        ) : (
-          <p>No drinks recorded.</p>
-        )}
 
-        <div className="grid grid-cols-3 gap-2 text-center pt-2">
-          <div>
-            <h3 className="text-sm">Current BAC</h3>
-            <p className="font-black text-2xl">{currentBac.toFixed(4)}</p>
-            <small>{stateInWords(currentBac)}</small>
-          </div>
-          <div>
-            <h3 className="text-sm">Time to Zero</h3>
-            <p className="font-black text-2xl">
-              {Math.floor(timeToZero)}h{Math.round((timeToZero - Math.floor(timeToZero)) * 60)}m
+  const formatTime = (hours: number) =>
+    `${Math.floor(hours)}h\u202f${Math.round((hours - Math.floor(hours)) * 60)}m`;
+
+  return (
+    <Card className="overflow-hidden">
+      <CardContent className="p-0">
+        {/* BAC centrepiece */}
+        <div className="flex flex-col items-center py-4 px-6 gap-1">
+          <p className="stat-label">
+            {lastDrink ? `Last drink ${dayjs().to(lastDrink.date)}` : "No drinks recorded"}
+          </p>
+
+          <div className="flex flex-col items-center gap-0.5 py-1">
+            <span className="stat-label">Current BAC</span>
+            <p className="font-nums text-5xl text-primary bac-glow leading-none tabular-nums">
+              {currentBac.toFixed(4)}
             </p>
-            <small>{timeToZero ? dayjs().add(timeToZero, "hours").format("h:mm a") : ""}</small>
+            <span className="font-display text-base italic text-muted-foreground">
+              {stateInWords(currentBac)}
+            </span>
           </div>
-          <div>
-            <h3 className="text-sm">Time to Target</h3>
-            <p className="font-black text-2xl">
-              {Math.floor(timeToTarget)}h
-              {Math.round((timeToTarget - Math.floor(timeToTarget)) * 60)}m
-            </p>
-            <small>{timeToTarget ? dayjs().add(timeToTarget, "hours").format("h:mm a") : ""}</small>
+        </div>
+
+        {/* Time stats */}
+        <div className="grid grid-cols-2 border-t border-border">
+          <div className="stat-block py-2 border-r border-border">
+            <span className="stat-label">Time to zero</span>
+            <p className="stat-value text-xl">{formatTime(timeToZero)}</p>
+            <span className="stat-sub">
+              {timeToZero ? dayjs().add(timeToZero, "hours").format("h:mm a") : "—"}
+            </span>
+          </div>
+          <div className="stat-block py-2">
+            <span className="stat-label">Time to target</span>
+            <p className="stat-value text-xl">{formatTime(timeToTarget)}</p>
+            <span className="stat-sub">
+              {timeToTarget ? dayjs().add(timeToTarget, "hours").format("h:mm a") : "—"}
+            </span>
           </div>
         </div>
       </CardContent>
